@@ -81,7 +81,7 @@ kernel with support for events in /proc/mdstat.
 %patch14 -p1 -b .autof
 #%patch15 -p1 -b .active
 #%patch16 -p1 -b .assemble
-%ifarch x86_64
+%ifarch x86_64 %{sunsparc}
 %{__perl} -pi -e 's/ \-Werror//' Makefile
 %endif
 cp %{SOURCE2} raidtabtomdadm.sh
@@ -93,21 +93,21 @@ chmod 644 ChangeLog
 %{error:only one of dietlibc, uclibc or klibc can be specified}
 exit 1
 %endif
-make mdassemble CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%make mdassemble CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
 %if %{with uclibc}
 %if %{with klibc}
 %{error:only one of dietlibc, uclibc or klibc can be specified}
 exit 1
 %endif
-make mdadm.uclibc mdassemble.uclibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%make mdadm.uclibc mdassemble.uclibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
 %if %{with klibc}
-make mdassemble.klibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%make mdassemble.klibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
-make CXFLAGS="%{optflags}" SYSCONFDIR="%{_sysconfdir}"
+%make CXFLAGS="%{optflags}" SYSCONFDIR="%{_sysconfdir}"
 %if %{with mdmpd}
-make -C mdmpd CCFLAGS="%{optflags} -I." SYSCONFDIR="%{_sysconfdir}"
+%make -C mdmpd CCFLAGS="%{optflags} -I." SYSCONFDIR="%{_sysconfdir}"
 %endif
 
 %install
