@@ -24,10 +24,13 @@
 %define _exec_prefix %{nil}
 
 Name:           mdadm
-Version:        2.6.1
+Version:        2.6.2
 Release:        %mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
-Source:         http://www.cse.unsw.edu.au/~neilb/source/mdadm/mdadm-%{version}.tgz
+Group:          System/Kernel and hardware
+License:        GPL
+URL:            http://www.cse.unsw.edu.au/~neilb/source/mdadm/
+Source0:        http://www.cse.unsw.edu.au/~neilb/source/mdadm/mdadm-%{version}.tgz
 Source1:        mdadm.init
 Source2:        raidtabtomdadm.sh
 Source3:        mdmpd-%{mdmpd_version}.tar.bz2
@@ -37,10 +40,12 @@ Patch11:        mdmpd-0.4-gcc4.patch
 Patch14:        mdadm-2.5.1-autof.patch
 #Patch15:       mdadm-2.5.3-active.patch
 #Patch16:       mdadm-2.5.3-mdassemble.patch
-URL:            http://www.cse.unsw.edu.au/~neilb/source/mdadm/
-License:        GPL
-Group:          System/Kernel and hardware
-BuildRequires:  man groff groff-for-man
+Requires(post): gawk
+Requires(post): rpm-helper
+Requires(preun): rpm-helper
+BuildRequires:  groff
+BuildRequires:  groff-for-man
+BuildRequires:  man
 %if %{with dietlibc}
 BuildRequires:  dietlibc-devel %{dietlibc_req}
 %endif
@@ -51,9 +56,6 @@ BuildRequires:  uClibc-devel
 BuildRequires:  klibc-devel
 %endif
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Requires(post): rpm-helper
-Requires(preun): rpm-helper
-Requires(post): gawk
 
 %description
 mdadm is a program that can be used to create, manage, and monitor
@@ -93,29 +95,29 @@ chmod 644 ChangeLog
 %{error:only one of dietlibc, uclibc or klibc can be specified}
 exit 1
 %endif
-%make mdassemble CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%{make} mdassemble CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
 %if %{with uclibc}
 %if %{with klibc}
 %{error:only one of dietlibc, uclibc or klibc can be specified}
 exit 1
 %endif
-%make mdadm.uclibc mdassemble.uclibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%{make} mdadm.uclibc mdassemble.uclibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
 %if %{with klibc}
-%make mdassemble.klibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%{make} mdassemble.klibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
-%make CXFLAGS="%{optflags}" SYSCONFDIR="%{_sysconfdir}"
+%{make} CXFLAGS="%{optflags}" SYSCONFDIR="%{_sysconfdir}"
 %if %{with mdmpd}
-%make -C mdmpd CCFLAGS="%{optflags} -I." SYSCONFDIR="%{_sysconfdir}"
+%{make} -C mdmpd CCFLAGS="%{optflags} -I." SYSCONFDIR="%{_sysconfdir}"
 %endif
 
 %install
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
-make DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=%{_sbindir} install
+%{makeinstall_std} MANDIR=%{_mandir} BINDIR=%{_sbindir}
 %if %{with mdmpd}
-make -C mdmpd DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=%{_sbindir} install
+%{makeinstall_std} -C mdmpd MANDIR=%{_mandir} BINDIR=%{_sbindir}
 %endif
 install -D -m 644 mdadm.conf-example %{buildroot}%{_sysconfdir}/mdadm.conf
 
@@ -141,7 +143,7 @@ install -D -m 644 mdassemble.8 %{buildroot}%{_mandir}/man8/mdassemble.8
 #install -D -m 755 mkinitramfs %{buildroot}%{_sbindir}/mkinitramfs
 
 %clean
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 %preun
 %_preun_service mdadm
@@ -162,19 +164,19 @@ install -D -m 644 mdassemble.8 %{buildroot}%{_mandir}/man8/mdassemble.8
 %files
 %defattr(644,root,root,755)
 %doc TODO ChangeLog mdadm.conf-example README.initramfs ANNOUNCE*
-%attr(755, root, root) %{_sbindir}/mdadm
-#attr(755, root, root) %{_sbindir}/mkinitramfs
+%attr(755,root,root) %{_sbindir}/mdadm
+#attr(755,root,root) %{_sbindir}/mkinitramfs
 %if %{with dietlibc} || %{with uclibc} || %{with klibc}
-%attr(755, root, root) %{_sbindir}/mdassemble
+%attr(755,root,root) %{_sbindir}/mdassemble
 %endif
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
-%attr(755, root, root) %{_initrddir}/mdadm
+%attr(755,root,root) %{_initrddir}/mdadm
 %{_mandir}/man*/md*
 
 %if %{with mdmpd}
 %files -n mdmpd
-%attr(755, root, root) %{_sbindir}/mdmpd
-%attr(755, root, root) %{_initrddir}/mdmpd
+%attr(755,root,root) %{_sbindir}/mdmpd
+%attr(755,root,root) %{_initrddir}/mdmpd
 %dir /var/run/mdmpd
 %endif
 
