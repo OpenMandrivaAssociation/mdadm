@@ -25,7 +25,7 @@
 
 Name:           mdadm
 Version:        2.6.2
-Release:        %mkrel 1
+Release:        %mkrel 2
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 License:        GPL
@@ -35,17 +35,14 @@ Source1:        mdadm.init
 Source2:        raidtabtomdadm.sh
 Source3:        mdmpd-%{mdmpd_version}.tar.bz2
 Source4:        mdmpd.init
-Patch10:        mdmpd-0.3-pid.patch
-Patch11:        mdmpd-0.4-gcc4.patch
-Patch14:        mdadm-2.5.1-autof.patch
-#Patch15:       mdadm-2.5.3-active.patch
-#Patch16:       mdadm-2.5.3-mdassemble.patch
+Patch0:         mdadm-2.6.2-werror.patch
+Patch1:         mdmpd-0.3-pid.patch
+Patch2:         mdmpd-0.4-gcc4.patch
+Patch3:         mdadm-2.5.1-autof.patch
 Requires(post): gawk
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
-BuildRequires:  groff
 BuildRequires:  groff-for-man
-BuildRequires:  man
 %if %{with dietlibc}
 BuildRequires:  dietlibc-devel %{dietlibc_req}
 %endif
@@ -78,16 +75,11 @@ kernel with support for events in /proc/mdstat.
 
 %prep
 %setup -q -a 3
-%patch10 -p0 -b .pid
-%patch11 -p0 -b .gcc4
-%patch14 -p1 -b .autof
-#%patch15 -p1 -b .active
-#%patch16 -p1 -b .assemble
-%ifarch x86_64 %{sunsparc}
-%{__perl} -pi -e 's/ \-Werror//' Makefile
-%endif
+%patch0 -p1
+%patch1 -p0
+%patch2 -p0
+%patch3 -p1
 cp %{SOURCE2} raidtabtomdadm.sh
-chmod 644 ChangeLog
 
 %build
 %if %{with dietlibc}
