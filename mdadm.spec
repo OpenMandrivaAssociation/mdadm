@@ -24,8 +24,8 @@
 %define _exec_prefix %{nil}
 
 Name:           mdadm
-Version:        2.6.2
-Release:        %mkrel 2
+Version:        2.6.3
+Release:        %mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 License:        GPL
@@ -79,6 +79,7 @@ kernel with support for events in /proc/mdstat.
 %patch1 -p0
 %patch2 -p0
 %patch3 -p1
+%{__perl} -pi -e 's/-Werror//' Makefile
 cp %{SOURCE2} raidtabtomdadm.sh
 
 %build
@@ -171,5 +172,3 @@ rm -rf %{buildroot}
 %attr(755,root,root) %{_initrddir}/mdmpd
 %dir /var/run/mdmpd
 %endif
-
-
