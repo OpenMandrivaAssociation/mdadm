@@ -25,7 +25,7 @@
 
 Name:           mdadm
 Version:        2.6.3
-Release:        %mkrel 2
+Release:        %mkrel 4
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 License:        GPL
@@ -80,6 +80,8 @@ kernel with support for events in /proc/mdstat.
 %patch2 -p0
 %patch3 -p1
 %{__perl} -pi -e 's/-Werror//' Makefile
+OPT_FLAGS=`/bin/echo %{optflags} | %{__sed} -e 's/-fstack-protector//'`
+%{__perl} -pi -e "s/^CXFLAGS = .*/CXFLAGS = $OPT_FLAGS/" Makefile
 cp %{SOURCE2} raidtabtomdadm.sh
 
 %build
@@ -88,19 +90,19 @@ cp %{SOURCE2} raidtabtomdadm.sh
 %{error:only one of dietlibc, uclibc or klibc can be specified}
 exit 1
 %endif
-%{make} mdassemble CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%{make} mdassemble %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
 %if %{with uclibc}
 %if %{with klibc}
 %{error:only one of dietlibc, uclibc or klibc can be specified}
 exit 1
 %endif
-%{make} mdadm.uclibc mdassemble.uclibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%{make} mdadm.uclibc mdassemble.uclibc %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
 %if %{with klibc}
-%{make} mdassemble.klibc CXFLAGS="%{optflags}" %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
+%{make} mdassemble.klibc %{mdassemble_auto_CFLAGS} SYSCONFDIR="%{_sysconfdir}"
 %endif
-%{make} CXFLAGS="%{optflags}" SYSCONFDIR="%{_sysconfdir}"
+%{make} SYSCONFDIR="%{_sysconfdir}"
 %if %{with mdmpd}
 %{make} -C mdmpd CCFLAGS="%{optflags} -I." SYSCONFDIR="%{_sysconfdir}"
 %endif
