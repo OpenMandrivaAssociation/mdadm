@@ -24,8 +24,8 @@
 %define _exec_prefix %{nil}
 
 Name:           mdadm
-Version:        2.6.3
-Release:        %mkrel 4
+Version:        2.6.4
+Release:        %mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 License:        GPL
