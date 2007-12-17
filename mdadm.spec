@@ -52,7 +52,6 @@ BuildRequires:  uClibc-devel
 %if %{with klibc}
 BuildRequires:  klibc-devel
 %endif
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 mdadm is a program that can be used to create, manage, and monitor
