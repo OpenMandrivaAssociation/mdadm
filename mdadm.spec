@@ -25,7 +25,7 @@
 
 Name:           mdadm
 Version:        2.6.4
-Release:        %mkrel 1
+Release:        %mkrel 2
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 License:        GPL
@@ -35,6 +35,7 @@ Source1:        mdadm.init
 Source2:        raidtabtomdadm.sh
 Source3:        mdmpd-%{mdmpd_version}.tar.bz2
 Source4:        mdmpd.init
+Source5:        mdadm.rules
 Patch0:         mdadm-2.6.2-werror.patch
 Patch1:         mdmpd-0.3-pid.patch
 Patch2:         mdmpd-0.4-gcc4.patch
@@ -134,6 +135,9 @@ install mdassemble.klibc %{buildroot}%{_sbindir}/mdassemble
 install -D -m 644 mdassemble.8 %{buildroot}%{_mandir}/man8/mdassemble.8
 %endif
 
+mkdir -p -m 755 %{buildroot}%{_sysconfdir}/udev/rules.d
+install -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/udev/rules.d/70-mdadm.rules
+
 #install -D -m 755 mkinitramfs %{buildroot}%{_sbindir}/mkinitramfs
 
 %clean
@@ -164,6 +168,7 @@ rm -rf %{buildroot}
 %attr(755,root,root) %{_sbindir}/mdassemble
 %endif
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
+%{_sysconfdir}/udev/rules.d/*
 %attr(755,root,root) %{_initrddir}/mdadm
 %{_mandir}/man*/md*
 
