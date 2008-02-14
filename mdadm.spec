@@ -28,6 +28,7 @@ Version:        2.6.4
 Release:        %mkrel 2
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 License:        GPL
 URL:            http://www.cse.unsw.edu.au/~neilb/source/mdadm/
 Source0:        http://www.cse.unsw.edu.au/~neilb/source/mdadm/mdadm-%{version}.tgz
