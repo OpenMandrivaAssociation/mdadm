@@ -25,7 +25,7 @@
 
 Name:           mdadm
 Version:        2.6.4
-Release:        %mkrel 2
+Release:        %manbo_mkrel 2
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -66,7 +66,7 @@ configuration file (that a config file can be used to help with
 some common tasks).
 
 %package -n mdmpd
-Summary:        daemon to monitor MD multipath devices
+Summary:        Daemon to monitor MD multipath devices
 Group:          System/Kernel and hardware
 
 %description -n mdmpd
