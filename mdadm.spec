@@ -25,10 +25,10 @@
 
 Name:           mdadm
 Version:        2.6.4
-Release:        %manbo_mkrel 2
+Release:        %manbo_mkrel 3
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 License:        GPL
 URL:            http://www.cse.unsw.edu.au/~neilb/source/mdadm/
 Source0:        http://www.cse.unsw.edu.au/~neilb/source/mdadm/mdadm-%{version}.tgz
