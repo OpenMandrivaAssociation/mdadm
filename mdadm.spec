@@ -65,6 +65,7 @@ program, and it can perform (almost) all functions without a
 configuration file (that a config file can be used to help with
 some common tasks).
 
+%if %{with mdmpd}
 %package -n mdmpd
 Summary:        Daemon to monitor MD multipath devices
 Group:          System/Kernel and hardware
@@ -73,6 +74,7 @@ Group:          System/Kernel and hardware
 This daemon will monitor md multipath devices for failure and recovery of
 device paths, in order to add paths back upon recovery. It requires a patched
 kernel with support for events in /proc/mdstat.
+%endif
 
 %prep
 %setup -q -a 3
