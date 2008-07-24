@@ -29,7 +29,7 @@ Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-License:        GPL
+License:        GPLv2+
 URL:            http://www.kernel.org/pub/linux/utils/raid/mdadm/
 Source0:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2
 Source1:        mdadm.init
