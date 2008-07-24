@@ -38,9 +38,9 @@ Source3:        mdmpd-%{mdmpd_version}.tar.bz2
 Source4:        mdmpd.init
 Source5:        mdadm.rules
 Patch0:         mdadm-2.6.2-werror.patch
-Patch1:         mdmpd-0.3-pid.patch
-Patch2:         mdmpd-0.4-gcc4.patch
 Patch3:         mdadm-2.5.1-autof.patch
+Patch101: 	mdmpd-0.3-pid.patch
+Patch102: 	mdmpd-0.4-gcc4.patch
 Requires(post): gawk
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
@@ -79,9 +79,9 @@ kernel with support for events in /proc/mdstat.
 %prep
 %setup -q -a 3
 %patch0 -p1
-%patch1 -p0
-%patch2 -p0
 %patch3 -p1
+%patch101 -p0
+%patch102 -p0
 %{__perl} -pi -e 's/-Werror//' Makefile
 OPT_FLAGS=`/bin/echo %{optflags} | %{__sed} -e 's/-fstack-protector//'`
 %{__perl} -pi -e "s/^CXFLAGS = .*/CXFLAGS = $OPT_FLAGS/" Makefile
