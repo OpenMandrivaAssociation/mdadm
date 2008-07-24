@@ -40,6 +40,7 @@ Source5:        mdadm.rules
 Patch0:         mdadm-2.6.2-werror.patch
 Patch2:         mdadm-2.5.2-static.patch
 Patch3:         mdadm-2.5.1-autof.patch
+Patch4:         mdadm-2.5.2-cflags.patch
 Patch101: 	mdmpd-0.3-pid.patch
 Patch102: 	mdmpd-0.4-gcc4.patch
 Requires(post): gawk
@@ -82,6 +83,7 @@ kernel with support for events in /proc/mdstat.
 %patch0 -p1
 %patch2 -p1 -b .static
 %patch3 -p1
+%patch4 -p1 -b .cflags
 %patch101 -p0
 %patch102 -p0
 %{__perl} -pi -e 's/-Werror//' Makefile
