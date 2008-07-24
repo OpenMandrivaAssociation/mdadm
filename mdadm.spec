@@ -49,6 +49,7 @@ Requires(post): gawk
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
 BuildRequires:  groff-for-man
+BuildRequires:  glibc-static-devel
 %if %{with dietlibc}
 BuildRequires:  dietlibc-devel %{dietlibc_req}
 %endif
