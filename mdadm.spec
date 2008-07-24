@@ -41,6 +41,7 @@ Patch0:         mdadm-2.6.2-werror.patch
 Patch1:	        mdadm-2.5.2-s390-build.patch
 Patch2:         mdadm-2.5.2-static.patch
 Patch4:         mdadm-2.5.2-cflags.patch
+Patch5:         mdadm-2.6.1-build.patch
 Patch101: 	mdmpd-0.3-pid.patch
 Patch102: 	mdmpd-0.4-gcc4.patch
 Requires(post): gawk
@@ -84,6 +85,7 @@ kernel with support for events in /proc/mdstat.
 %patch1 -p1 -b .s390
 %patch2 -p1 -b .static
 %patch4 -p1 -b .cflags
+%patch5 -p1 -b .build
 %patch101 -p0
 %patch102 -p0
 OPT_FLAGS=`/bin/echo %{optflags} | %{__sed} -e 's/-fstack-protector//'`
