@@ -38,6 +38,7 @@ Source3:        mdmpd-%{mdmpd_version}.tar.bz2
 Source4:        mdmpd.init
 Source5:        mdadm.rules
 Patch0:         mdadm-2.6.2-werror.patch
+Patch1:	        mdadm-2.5.2-s390-build.patch
 Patch2:         mdadm-2.5.2-static.patch
 Patch4:         mdadm-2.5.2-cflags.patch
 Patch101: 	mdmpd-0.3-pid.patch
@@ -80,11 +81,11 @@ kernel with support for events in /proc/mdstat.
 %prep
 %setup -q -a 3
 %patch0 -p1
+%patch1 -p1 -b .s390
 %patch2 -p1 -b .static
 %patch4 -p1 -b .cflags
 %patch101 -p0
 %patch102 -p0
-%{__perl} -pi -e 's/-Werror//' Makefile
 OPT_FLAGS=`/bin/echo %{optflags} | %{__sed} -e 's/-fstack-protector//'`
 %{__perl} -pi -e "s/^CXFLAGS = .*/CXFLAGS = $OPT_FLAGS/" Makefile
 cp %{SOURCE2} raidtabtomdadm.sh
