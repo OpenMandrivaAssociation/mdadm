@@ -38,6 +38,7 @@ Source3:        mdmpd-%{mdmpd_version}.tar.bz2
 Source4:        mdmpd.init
 Source5:        mdadm.rules
 Patch0:         mdadm-2.6.2-werror.patch
+Patch2:         mdadm-2.5.2-static.patch
 Patch3:         mdadm-2.5.1-autof.patch
 Patch101: 	mdmpd-0.3-pid.patch
 Patch102: 	mdmpd-0.4-gcc4.patch
@@ -79,6 +80,7 @@ kernel with support for events in /proc/mdstat.
 %prep
 %setup -q -a 3
 %patch0 -p1
+%patch2 -p1 -b .static
 %patch3 -p1
 %patch101 -p0
 %patch102 -p0
@@ -142,6 +144,9 @@ mkdir -p -m 755 %{buildroot}%{_sysconfdir}/udev/rules.d
 install -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/udev/rules.d/70-mdadm.rules
 
 #install -D -m 755 mkinitramfs %{buildroot}%{_sbindir}/mkinitramfs
+
+# we have our own way to build static binaries
+rm -f %{buildroot}/sbin/*.static
 
 %clean
 rm -rf %{buildroot}
