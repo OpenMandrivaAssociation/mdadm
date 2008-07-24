@@ -24,14 +24,14 @@
 %define _exec_prefix %{nil}
 
 Name:           mdadm
-Version:        2.6.4
-Release:        %manbo_mkrel 3
+Version:        2.6.7
+Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 License:        GPL
 URL:            http://www.cse.unsw.edu.au/~neilb/source/mdadm/
-Source0:        http://www.cse.unsw.edu.au/~neilb/source/mdadm/mdadm-%{version}.tgz
+Source0:        http://www.cse.unsw.edu.au/~neilb/source/mdadm/mdadm-%{version}.tar.bz2
 Source1:        mdadm.init
 Source2:        raidtabtomdadm.sh
 Source3:        mdmpd-%{mdmpd_version}.tar.bz2
