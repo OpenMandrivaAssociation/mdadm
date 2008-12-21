@@ -22,10 +22,11 @@
 
 # we want to install in /sbin, not /usr/sbin...
 %define _exec_prefix %{nil}
+%define _sbindir /sbin
 
 Name:           mdadm
-Version:        2.6.7
-Release:        %manbo_mkrel 2
+Version:        2.6.8
+Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -42,8 +43,6 @@ Patch1:	        mdadm-2.5.2-s390-build.patch
 Patch2:         mdadm-2.5.2-static.patch
 Patch4:         mdadm-2.5.2-cflags.patch
 Patch5:         mdadm-2.6.1-build.patch
-Patch6:         mdadm-2.6.4-open.patch
-Patch7: 	mdadm-2.6.7-Fix-raid10-NULL-pointer-oops.patch
 Patch101: 	mdmpd-0.3-pid.patch
 Patch102: 	mdmpd-0.4-gcc4.patch
 Requires(post): gawk
@@ -83,14 +82,13 @@ kernel with support for events in /proc/mdstat.
 %endif
 
 %prep
+
 %setup -q -a 3
-%patch0 -p1
+%patch0 -p0 -b .werror
 %patch1 -p1 -b .s390
 %patch2 -p1 -b .static
-%patch4 -p1 -b .cflags
+%patch4 -p0 -b .cflags
 %patch5 -p1 -b .build
-%patch6 -p1 -b .open
-%patch7 -p1 -b .raid10-oops
 %patch101 -p0
 %patch102 -p0
 OPT_FLAGS=`/bin/echo %{optflags} | %{__sed} -e 's/-fstack-protector//'`
