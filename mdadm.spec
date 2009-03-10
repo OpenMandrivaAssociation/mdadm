@@ -25,7 +25,7 @@
 %define _sbindir /sbin
 
 Name:           mdadm
-Version:        2.6.8
+Version:        2.6.9
 Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
@@ -42,7 +42,7 @@ Patch0:         mdadm-2.6.2-werror.patch
 Patch1:	        mdadm-2.5.2-s390-build.patch
 Patch2:         mdadm-2.5.2-static.patch
 Patch4:         mdadm-2.5.2-cflags.patch
-Patch5:         mdadm-2.6.1-build.patch
+Patch5:         mdadm-2.6.9-build.patch
 Patch101: 	mdmpd-0.3-pid.patch
 Patch102: 	mdmpd-0.4-gcc4.patch
 Requires(post): gawk
