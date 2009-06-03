@@ -25,8 +25,8 @@
 %define _sbindir /sbin
 
 Name:           mdadm
-Version:        2.6.9
-Release:        %manbo_mkrel 2
+Version:        3.0
+Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -37,12 +37,8 @@ Source1:        mdadm.init
 Source2:        raidtabtomdadm.sh
 Source3:        mdmpd-%{mdmpd_version}.tar.bz2
 Source4:        mdmpd.init
-Source5:        mdadm.rules
-Patch0:         mdadm-2.6.2-werror.patch
-Patch1:	        mdadm-2.5.2-s390-build.patch
 Patch2:         mdadm-2.5.2-static.patch
 Patch4:         mdadm-2.5.2-cflags.patch
-Patch5:         mdadm-2.6.9-build.patch
 Patch101: 	mdmpd-0.3-pid.patch
 Patch102: 	mdmpd-0.4-gcc4.patch
 Requires(post): gawk
@@ -84,11 +80,8 @@ kernel with support for events in /proc/mdstat.
 %prep
 
 %setup -q -a 3
-%patch0 -p0 -b .werror
-%patch1 -p1 -b .s390
 %patch2 -p1 -b .static
 %patch4 -p0 -b .cflags
-%patch5 -p1 -b .build
 %patch101 -p0
 %patch102 -p0
 OPT_FLAGS=`/bin/echo %{optflags} | %{__sed} -e 's/-fstack-protector//'`
@@ -146,11 +139,6 @@ install mdassemble.klibc %{buildroot}%{_sbindir}/mdassemble
 install -D -m 644 mdassemble.8 %{buildroot}%{_mandir}/man8/mdassemble.8
 %endif
 
-mkdir -p -m 755 %{buildroot}%{_sysconfdir}/udev/rules.d
-install -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/udev/rules.d/70-mdadm.rules
-
-#install -D -m 755 mkinitramfs %{buildroot}%{_sbindir}/mkinitramfs
-
 # we have our own way to build static binaries
 rm -f %{buildroot}/sbin/*.static
 
@@ -177,17 +165,18 @@ rm -rf %{buildroot}
 %defattr(644,root,root,755)
 %doc TODO ChangeLog mdadm.conf-example README.initramfs ANNOUNCE*
 %attr(755,root,root) %{_sbindir}/mdadm
-#attr(755,root,root) %{_sbindir}/mkinitramfs
+%attr(755,root,root) %{_sbindir}/mdmon
 %if %{with dietlibc} || %{with uclibc} || %{with klibc}
 %attr(755,root,root) %{_sbindir}/mdassemble
 %endif
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
-%{_sysconfdir}/udev/rules.d/*
+/lib/udev/rules.d/*
 %attr(755,root,root) %{_initrddir}/mdadm
 %{_mandir}/man*/md*
 
 %if %{with mdmpd}
 %files -n mdmpd
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/mdmpd
 %attr(755,root,root) %{_initrddir}/mdmpd
 %dir /var/run/mdmpd
