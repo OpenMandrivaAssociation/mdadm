@@ -4,7 +4,7 @@
 
 Name:           mdadm
 Version:        3.0
-Release:        %manbo_mkrel 2
+Release:        %manbo_mkrel 3
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -20,6 +20,8 @@ Patch2:         mdadm-3.0-endian-FAIL.patch
 Patch3:         mdadm-3.0-udev.patch
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
+# udev rule used to be in udev package
+Conflicts:      udev < 145-2
 BuildRequires:  groff-for-man
 
 %description
