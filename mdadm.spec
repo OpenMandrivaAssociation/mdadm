@@ -3,8 +3,8 @@
 %define _sbindir /sbin
 
 Name:           mdadm
-Version:        3.0
-Release:        %manbo_mkrel 4
+Version:        3.0.2
+Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
