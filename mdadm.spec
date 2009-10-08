@@ -4,7 +4,7 @@
 
 Name:           mdadm
 Version:        3.0.2
-Release:        %manbo_mkrel 1
+Release:        %manbo_mkrel 2
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -19,6 +19,7 @@ Patch1:         mdadm-2.5.2-cflags.patch
 Patch2:         mdadm-3.0-endian-FAIL.patch
 Patch3:         mdadm-3.0-udev.patch
 Patch4:		mdadm-3.0-detail-space.patch
+Patch5:		mdadm-3.0.2-nullptr.diff
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
 # udev rule used to be in udev package
@@ -42,6 +43,7 @@ some common tasks).
 %patch2 -p1 -b .endian
 %patch3 -p1 -b .udev
 %patch4 -p1 -b .detailspace
+%patch5 -p1 -b .nullptr
 OPT_FLAGS=`/bin/echo %{optflags} | %{__sed} -e 's/-fstack-protector//'`
 %{__perl} -pi -e "s/^CXFLAGS = .*/CXFLAGS = $OPT_FLAGS/" Makefile
 
