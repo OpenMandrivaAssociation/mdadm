@@ -3,6 +3,8 @@
 %define _sbindir /sbin
 
 Name:           mdadm
+# NOTE! DO NOT UPDATE TO 3.1.x SERIES YET!
+# We dont consider it safe yet! bluca / tmb
 Version:        3.0.2
 Release:        %manbo_mkrel 2
 Summary:        A tool for managing Soft RAID under Linux
