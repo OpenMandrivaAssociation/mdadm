@@ -26,7 +26,8 @@ Requires(post): rpm-helper
 Requires(preun): rpm-helper
 # udev rule used to be in udev package
 Conflicts:      udev < 145-2
-BuildRequires:  groff-for-man
+# groff-for-man should be enough but is currently broken (#56246)
+BuildRequires:  groff
 
 %description
 mdadm is a program that can be used to create, manage, and monitor
