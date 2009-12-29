@@ -6,7 +6,7 @@ Name:           mdadm
 # NOTE! DO NOT UPDATE TO 3.1.x SERIES YET!
 # We dont consider it safe yet! bluca / tmb
 Version:        3.0.3
-Release:        %manbo_mkrel 1
+Release:        %manbo_mkrel 2
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -24,6 +24,8 @@ Patch2:         mdadm-3.0-metadata.patch
 Patch3:         mdadm-3.0-uuid.patch
 Patch4:         mdadm-3.0-mdmon-dev-.mdadm.patch
 Patch5:         mdadm-3.0.3-intel-serial.patch
+# from Dan Williams git
+patch1000:      mdadm-3.0.3-imsm-git.patch
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
 # udev rule used to be in udev package
@@ -43,6 +45,7 @@ some common tasks).
 
 %prep
 %setup -q
+%patch1000 -p1 -b .imsm
 %patch0 -p0 -b .cflags
 %patch1 -p1 -b .udev
 %patch2 -p1 -b .metadata
