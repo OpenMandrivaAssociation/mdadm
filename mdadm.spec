@@ -1,31 +1,30 @@
 # we want to install in /sbin, not /usr/sbin...
 %define _exec_prefix %{nil}
 %define _sbindir /sbin
+%define git 24af7a8744d947b5c3f062af55312c044ca12a95
+
+%bcond_with	testing
 
 Name:           mdadm
-# NOTE! DO NOT UPDATE TO 3.1.x SERIES YET!
-# We dont consider it safe yet! bluca / tmb
-Version:        3.0.3
-Release:        %manbo_mkrel 2
+Version:        3.1.1
+Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 License:        GPLv2+
 URL:            http://www.kernel.org/pub/linux/utils/raid/mdadm/
-Source0:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2
+Source0:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version}%{?git:%git}.tar.bz2
+%if %undefined git
 Source1:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2.sign
+%endif
 Patch0:         mdadm-2.5.2-cflags.patch
 Patch1:         mdadm-3.0-udev.patch
+Patch2:		mdadm-3.1.1-warn.patch
+Patch3:		mdadm-3.1.1-mdmon.patch
 #From Fedora
 Source2:        mdadm.init
 Source3:        mdadm-raid-check
 Source4:        mdadm-raid-check-sysconfig
-Patch2:         mdadm-3.0-metadata.patch
-Patch3:         mdadm-3.0-uuid.patch
-Patch4:         mdadm-3.0-mdmon-dev-.mdadm.patch
-Patch5:         mdadm-3.0.3-intel-serial.patch
-# from Dan Williams git
-patch1000:      mdadm-3.0.3-imsm-git.patch
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
 # udev rule used to be in udev package
@@ -44,19 +43,20 @@ configuration file (that a config file can be used to help with
 some common tasks).
 
 %prep
-%setup -q
-%patch1000 -p1 -b .imsm
+%if %without testing
+echo "please dont submit this package yet"
+exit 1
+%endif
+%setup -q %{?git:-n %name}
 %patch0 -p0 -b .cflags
 %patch1 -p1 -b .udev
-%patch2 -p1 -b .metadata
-%patch3 -p1 -b .uuid
-%patch4 -p1 -b .mdmon
-%patch5 -p1 -b .serial
-OPT_FLAGS=`/bin/echo %{optflags} | %{__sed} -e 's/-fstack-protector//'`
-%{__perl} -pi -e "s/^CXFLAGS = .*/CXFLAGS = $OPT_FLAGS/" Makefile
+%patch2 -p1 -b .warn
+%patch3 -p1 -b .mdmon
+
 
 %build
-%{make} SYSCONFDIR="%{_sysconfdir}"
+%define _ssp_cflags %{nil}
+make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}" ALT_RUN="/dev/.mdadm"
 
 %install
 rm -rf %{buildroot}
