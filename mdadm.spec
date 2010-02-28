@@ -55,8 +55,7 @@ exit 1
 
 
 %build
-%define _ssp_cflags %{nil}
-make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}" ALT_RUN="/dev/.mdadm"
+make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}" VAR_RUN="/dev/.mdadm" ALT_RUN="/dev/.mdadm"
 
 %install
 rm -rf %{buildroot}
