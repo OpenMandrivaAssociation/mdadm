@@ -1,9 +1,9 @@
 # we want to install in /sbin, not /usr/sbin...
 %define _exec_prefix %{nil}
 %define _sbindir /sbin
-%define git 24af7a8744d947b5c3f062af55312c044ca12a95
+%define git a380e2751efea7dfe8acf0b95419c65ccacfa7cf
 
-%bcond_with	testing
+%bcond_without	testing
 
 Name:           mdadm
 Version:        3.1.1
@@ -19,8 +19,7 @@ Source1:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version
 %endif
 Patch0:         mdadm-2.5.2-cflags.patch
 Patch1:         mdadm-3.0-udev.patch
-Patch2:		mdadm-3.1.1-warn.patch
-Patch3:		mdadm-3.1.1-mdmon.patch
+Patch2:         mdadm-3.1.1-varrun.patch
 #From Fedora
 Source2:        mdadm.init
 Source3:        mdadm-raid-check
@@ -50,12 +49,11 @@ exit 1
 %setup -q %{?git:-n %name}
 %patch0 -p0 -b .cflags
 %patch1 -p1 -b .udev
-%patch2 -p1 -b .warn
-%patch3 -p1 -b .mdmon
-
+%patch2 -p1 -b .varrun
+echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
 
 %build
-make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}" VAR_RUN="/dev/.mdadm" ALT_RUN="/dev/.mdadm"
+make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
 
 %install
 rm -rf %{buildroot}
@@ -64,6 +62,7 @@ install -D -m 644 mdadm.conf-example %{buildroot}%{_sysconfdir}/mdadm.conf
 install -D %{SOURCE2} %{buildroot}%{_initrddir}/mdadm
 install -D %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.weekly/99-raid-check
 install -D -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/raid-check
+install -D misc/syslog-events %{buildroot}%{_sbindir}/mdadm-syslog-events
 mkdir -p %{buildroot}/var/run/mdadm
 
 %clean
@@ -77,8 +76,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(644,root,root,755)
-%doc TODO ChangeLog mdadm.conf-example README.initramfs ANNOUNCE* misc/*
+%doc TODO ChangeLog mdadm.conf-example README.initramfs ANNOUNCE*
 %attr(755,root,root) %{_sbindir}/mdadm
+%attr(755,root,root) %{_sbindir}/mdadm-syslog-events
 %attr(755,root,root) %{_sbindir}/mdmon
 %attr(755,root,root) %{_sysconfdir}/cron.weekly/99-raid-check
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
