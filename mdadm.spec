@@ -1,12 +1,12 @@
 # we want to install in /sbin, not /usr/sbin...
 %define _exec_prefix %{nil}
 %define _sbindir /sbin
-%define git a380e2751efea7dfe8acf0b95419c65ccacfa7cf
+#define git %{nil}
 
 %bcond_without	testing
 
 Name:           mdadm
-Version:        3.1.1
+Version:        3.1.2
 Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
