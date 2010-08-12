@@ -6,8 +6,9 @@
 %bcond_without	testing
 
 Name:           mdadm
-Version:        3.1.2
-Release:        %manbo_mkrel 1
+### NOTE! DONT UPDATE to 3.1.3 as its broken ! /tmb 12-08-2010
+#Version:        3.1.2
+#Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
