@@ -6,7 +6,7 @@
 %bcond_without	testing
 
 Name:           mdadm
-Version:        3.1.3
+Version:        3.1.4
 Release:        %manbo_mkrel 1
 Summary:        A tool for managing Soft RAID under Linux
 Group:          System/Kernel and hardware
@@ -18,11 +18,6 @@ Source0:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%
 Source1:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2.sign
 %endif
 Patch0:		mdadm-2.5.2-cflags.patch
-Patch3: 	mdadm-3.1.3-fix-intel-super-strfmt.patch
-Patch4: 	mdadm-3.1.3-link-only-mdmon-with-pthreads.patch
-Patch5: 	mdadm-3.1.3-Incremental-return-success-in-container-not-enough-case.patch
-Patch6: 	mdadm-3.1.3-Incremental-accept--no-degraded-as-a-deprecated-option.patch
-Patch7: 	mdadm-3.1.3-Allow--incremental-to-add-spares-to-an-array.patch
 
 #From Fedora
 Source2:        mdadm.init
@@ -52,11 +47,6 @@ exit 1
 %endif
 %setup -q %{?git:-n %name}
 %patch0 -p0 -b .cflags
-%patch3 -p1 -b .strfmt
-%patch4 -p1 -b .pthreads
-%patch5 -p1 -b .inc-success
-%patch6 -p1 -b .inc-accept
-%patch7 -p1 -b .inc-spare
 
 echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
 
