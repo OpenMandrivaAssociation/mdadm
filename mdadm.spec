@@ -5,30 +5,38 @@
 
 %bcond_without	testing
 
-Name:           mdadm
-Version:        3.1.4
-Release:        %manbo_mkrel 1
-Summary:        A tool for managing Soft RAID under Linux
-Group:          System/Kernel and hardware
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-License:        GPLv2+
-URL:            http://www.kernel.org/pub/linux/utils/raid/mdadm/
-Source0:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version}%{?git:%git}.tar.bz2
+Name:		mdadm
+Version:	3.1.4
+Release:	%manbo_mkrel 2
+Summary:	A tool for managing Soft RAID under Linux
+Group:		System/Kernel and hardware
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+License:	GPLv2+
+URL:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
+Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version}%{?git:%git}.tar.bz2
 %if %undefined git
-Source1:        http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2.sign
+Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2.sign
 %endif
 Patch0:		mdadm-2.5.2-cflags.patch
+# this patch is needed because our initscripts do not use incremental assembly
+# it can be removed only _after_ initscripts has been fixed and a conflict for
+# older inistcripts is added (bluca)
+Patch1:		mdadm-3.1.4-udev.patch
+Patch2:		mdadm-3.1.4-imsm-create-segfault.patch
+Patch3:		mdadm-3.1.4-container-stop.patch
 
 #From Fedora
-Source2:        mdadm.init
-Source3:        mdadm-raid-check
-Source4:        mdadm-raid-check-sysconfig
-Requires(post): rpm-helper
-Requires(preun): rpm-helper
+Source2:	mdadm.init
+Source3:	mdadm-raid-check
+Source4:	mdadm-raid-check-sysconfig
+# we do not use it yet
+Source5:	mdadm.rules
+Requires(post):	rpm-helper
+Requires(preun):	rpm-helper
 # udev rule used to be in udev package
-Conflicts:      udev < 145-2
+Conflicts:	udev < 145-2
 # groff-for-man should be enough but is currently broken (#56246)
-BuildRequires:  groff
+BuildRequires:	groff
 
 %description
 mdadm is a program that can be used to create, manage, and monitor
@@ -47,6 +55,9 @@ exit 1
 %endif
 %setup -q %{?git:-n %name}
 %patch0 -p0 -b .cflags
+%patch1 -p1 -b .udev
+%patch2 -p1 -b .orom
+%patch3 -p1 -b .stop
 
 echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
 
