@@ -6,8 +6,8 @@
 %bcond_without	testing
 
 Name:		mdadm
-Version:	3.1.4
-Release:	%manbo_mkrel 2
+Version:	3.1.5
+Release:	%manbo_mkrel 1
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -22,7 +22,6 @@ Patch0:		mdadm-2.5.2-cflags.patch
 # it can be removed only _after_ initscripts has been fixed and a conflict for
 # older inistcripts is added (bluca)
 Patch1:		mdadm-3.1.4-udev.patch
-Patch2:		mdadm-3.1.4-imsm-create-segfault.patch
 Patch3:		mdadm-3.1.4-container-stop.patch
 
 #From Fedora
@@ -56,7 +55,6 @@ exit 1
 %setup -q %{?git:-n %name}
 %patch0 -p0 -b .cflags
 %patch1 -p1 -b .udev
-%patch2 -p1 -b .orom
 %patch3 -p1 -b .stop
 
 echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
