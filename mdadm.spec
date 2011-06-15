@@ -1,41 +1,50 @@
 # we want to install in /sbin, not /usr/sbin...
 %define _exec_prefix %{nil}
 %define _sbindir /sbin
+%define _usrsbindir /usr/sbin
 #define git %{nil}
 
-%bcond_without	testing
-
 Name:		mdadm
-Version:	3.1.5
-Release:	%manbo_mkrel 2
+Version:	3.2.1
+Release:	%mkrel 1
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 License:	GPLv2+
 URL:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
 Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version}%{?git:%git}.tar.bz2
-%if %undefined git
+%if %{?git:0}%{?!git:1}
 Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2.sign
 %endif
-Patch0:		mdadm-2.5.2-cflags.patch
-# this patch is needed because our initscripts do not use incremental assembly
-# it can be removed only _after_ initscripts has been fixed and a conflict for
-# older inistcripts is added (bluca)
-Patch1:		mdadm-3.1.4-udev.patch
-Patch3:		mdadm-3.1.4-container-stop.patch
-
 #From Fedora
+Patch0:		mdadm-3.1.5-unused-param.patch
+#From Fedora, slightly modified
+Patch1:		mdadm-3.2.1-udev.patch
+# fix strict aliasing with -Wstrict-alias=2
+Patch2:		mdadm-3.2.1-gpt.patch
+Patch3:		mdadm-3.2.1-strictalias.patch
+
+#From Fedora, slightly modified
 Source2:	mdadm.init
+#From Fedora
 Source3:	mdadm-raid-check
 Source4:	mdadm-raid-check-sysconfig
-# we do not use it yet
-Source5:	mdadm.rules
+Source5:	mdadm-cron
+#From Fedora, modified because our initscripts do not use incremental assembly
+# modification can be reverted only _after_ initscripts has been fixed and a
+# conflict for older inistcripts is added (bluca)
+Source6:	mdadm.rules
+#
 Requires(post):	rpm-helper
 Requires(preun):	rpm-helper
 # udev rule used to be in udev package
 Conflicts:	udev < 145-2
+%if %mdkversion < 201010
 # groff-for-man should be enough but is currently broken (#56246)
 BuildRequires:	groff
+%else
+BuildRequires:	groff-for-man >= 1.20.1-2mdv
+%endif
 
 %description
 mdadm is a program that can be used to create, manage, and monitor
@@ -48,16 +57,13 @@ configuration file (that a config file can be used to help with
 some common tasks).
 
 %prep
-%if %without testing
-echo "please dont submit this package yet"
-exit 1
-%endif
 %setup -q %{?git:-n %name}
-%patch0 -p0 -b .cflags
+%patch0 -p1 -b .unused
 %patch1 -p1 -b .udev
-%patch3 -p1 -b .stop
+%patch2 -p1 -b .gpt
+%patch3 -p1 -b .strictalias
 
-echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
+echo "PROGRAM %{_sbindir}/mdadm-syslog-events" >> mdadm.conf-example
 
 %build
 make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
@@ -65,11 +71,13 @@ make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
 %install
 rm -rf %{buildroot}
 %{makeinstall_std} MANDIR=%{_mandir} BINDIR=%{_sbindir}
-install -D -m 644 mdadm.conf-example %{buildroot}%{_sysconfdir}/mdadm.conf
-install -D %{SOURCE2} %{buildroot}%{_initrddir}/mdadm
-install -D %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.weekly/99-raid-check
-install -D -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/raid-check
-install -D misc/syslog-events %{buildroot}%{_sbindir}/mdadm-syslog-events
+install -Dp -m 644 mdadm.conf-example %{buildroot}%{_sysconfdir}/mdadm.conf
+install -Dp %{SOURCE2} %{buildroot}%{_initrddir}/mdadm
+install -Dp %{SOURCE3} %{buildroot}%{_usrsbindir}/raid-check
+install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/raid-check
+install -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/cron.d/raid-check
+install -Dp misc/syslog-events %{buildroot}%{_sbindir}/mdadm-syslog-events
+install -Dp -m 644 %{SOURCE6} %{buildroot}/lib/udev/rules.d/65-md-incremental.rules
 mkdir -p %{buildroot}/var/run/mdadm
 
 %clean
@@ -83,14 +91,16 @@ rm -rf %{buildroot}
 
 %files
 %defattr(644,root,root,755)
-%doc TODO ChangeLog mdadm.conf-example README.initramfs ANNOUNCE*
+%doc TODO ChangeLog README.initramfs ANNOUNCE*
 %attr(755,root,root) %{_sbindir}/mdadm
 %attr(755,root,root) %{_sbindir}/mdadm-syslog-events
 %attr(755,root,root) %{_sbindir}/mdmon
-%attr(755,root,root) %{_sysconfdir}/cron.weekly/99-raid-check
+%attr(755,root,root) %{_usrsbindir}/raid-check
+%config(noreplace) %{_sysconfdir}/cron.d/raid-check
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/raid-check
 /lib/udev/rules.d/64-md-raid.rules
+/lib/udev/rules.d/65-md-incremental.rules
 %attr(755,root,root) %{_initrddir}/mdadm
 %{_mandir}/man*/md*
 %attr(700,root,root) %dir /var/run/mdadm
