@@ -5,8 +5,8 @@
 #define git %{nil}
 
 Name:		mdadm
-Version:	3.2.1
-Release:	%mkrel 2
+Version:	3.2.2
+Release:	%mkrel 1
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -16,14 +16,8 @@ Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version
 %if %{?git:0}%{?!git:1}
 Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2.sign
 %endif
-#From Fedora
-Patch0:		mdadm-3.1.5-unused-param.patch
 #From Fedora, slightly modified
 Patch1:		mdadm-3.2.1-udev.patch
-# fix strict aliasing with -Wstrict-alias=2
-Patch2:		mdadm-3.2.1-gpt.patch
-Patch3:		mdadm-3.2.1-strictalias.patch
-
 #From Fedora, slightly modified
 Source2:	mdadm.init
 #From Fedora
@@ -58,10 +52,7 @@ some common tasks).
 
 %prep
 %setup -q %{?git:-n %name}
-%patch0 -p1 -b .unused
 %patch1 -p1 -b .udev
-%patch2 -p1 -b .gpt
-%patch3 -p1 -b .strictalias
 
 echo "PROGRAM %{_sbindir}/mdadm-syslog-events" >> mdadm.conf-example
 
