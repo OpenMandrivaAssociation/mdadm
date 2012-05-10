@@ -5,7 +5,7 @@
 #define git %{nil}
 
 Name:		mdadm
-Version:	3.2.3
+Version:	3.2.4
 Release:	%mkrel 1
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
@@ -17,12 +17,8 @@ Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.s
 %endif
 # From Fedora, slightly modified
 Patch1:		mdadm-3.2.3-udev.patch
-# fixes from uptream
-Patch2:		super1-make-aread-awrite-always-use-an-aligned-buffe.patch
-Patch3:		Use-posix_memalign-for-memory-used-to-write-bitmaps.patch
-Patch4:		Print-error-message-if-failing-to-write-super-for-1..patch
-Patch5:		Bitmap_offset-is-a-signed-number.patch
-Patch6:		fix-Monitor-sometimes-crashes.patch
+# don't use -Werror flag
+Patch2:		mdadm-3.2.4-mdv-no_werror.patch
 # From Fedora, slightly modified
 Source2:	mdadm.init
 # From Fedora
@@ -59,6 +55,7 @@ some common tasks).
 echo "PROGRAM %{_sbindir}/mdadm-syslog-events" >> mdadm.conf-example
 
 %build
+%setup_compile_flags
 make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
 
 %install
