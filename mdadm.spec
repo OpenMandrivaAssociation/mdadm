@@ -5,7 +5,7 @@
 #define git %{nil}
 
 Name:		mdadm
-Version:	3.2.4
+Version:	3.2.5
 Release:	%mkrel 1
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
@@ -37,6 +37,7 @@ Requires(preun): rpm-helper
 # udev rule used to be in udev package
 Conflicts:	udev < 145-2
 BuildRequires:	groff
+BuildRequires:	binutils-devel
 
 %description
 mdadm is a program that can be used to create, manage, and monitor
