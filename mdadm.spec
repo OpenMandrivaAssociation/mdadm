@@ -79,6 +79,7 @@ install -Dp -m 644 %{SOURCE6} %{buildroot}/lib/udev/rules.d/65-md-incremental.ru
 install -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
 install -m 644 %{SOURCE8} %{buildroot}%{_unitdir}
 install -m 644 %{SOURCE9} -D %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
+rm -rf %{buildroot}%{_initrddir}/mdadm
 %endif
 
 %post
