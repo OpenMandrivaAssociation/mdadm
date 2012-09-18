@@ -76,9 +76,9 @@ install -Dp misc/syslog-events %{buildroot}%{_sbindir}/mdadm-syslog-events
 install -Dp -m 644 %{SOURCE6} %{buildroot}/lib/udev/rules.d/65-md-incremental.rules
 
 %if %mdvver >= 201200
-install -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE8} %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE9} -D %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
+install -Dp -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
+install -Dp -m 644 %{SOURCE8} %{buildroot}%{_unitdir}
+install -Dp -m 644 %{SOURCE9} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
 rm -rf %{buildroot}%{_initrddir}/mdadm
 %endif
 
