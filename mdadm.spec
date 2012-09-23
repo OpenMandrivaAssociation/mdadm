@@ -76,9 +76,11 @@ install -Dp misc/syslog-events %{buildroot}%{_sbindir}/mdadm-syslog-events
 install -Dp -m 644 %{SOURCE6} %{buildroot}/lib/udev/rules.d/65-md-incremental.rules
 
 %if %mdvver >= 201200
-install -Dp -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
-install -Dp -m 644 %{SOURCE8} %{buildroot}%{_unitdir}
-install -Dp -m 644 %{SOURCE9} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
+install -d -m 755 %{buildroot}%{_unitdir}
+install -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
+install -m 644 %{SOURCE8} %{buildroot}%{_unitdir}
+ln -s mdmonitor.service %{buildroot}%{_unitdir}/mdadm.service
+install -D -m 644 %{SOURCE9} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
 rm -rf %{buildroot}%{_initrddir}/mdadm
 %endif
 
@@ -103,7 +105,7 @@ systemd-tmpfiles --create %{name}.conf
 /lib/udev/rules.d/64-md-raid.rules
 /lib/udev/rules.d/65-md-incremental.rules
 %if %mdvver >= 201200
-%{_unitdir}mdmonitor*.service
+%{_unitdir}/*.service
 %{_prefix}/lib/tmpfiles.d/%{name}.conf
 %else
 %{_initrddir}/mdadm
