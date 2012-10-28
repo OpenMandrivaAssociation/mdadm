@@ -1,9 +1,3 @@
-# we want to install in /sbin, not /usr/sbin...
-%define _exec_prefix %{nil}
-%define _sbindir /sbin
-%define _usrsbindir /usr/sbin
-#define git %{nil}
-
 Name:		mdadm
 Version:	3.2.5
 Release:	2
@@ -58,21 +52,21 @@ some common tasks).
 %setup -q %{?git:-n %name}
 %apply_patches
 
-echo "PROGRAM %{_sbindir}/mdadm-syslog-events" >> mdadm.conf-example
+echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
 
 %build
 %setup_compile_flags
 make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
 
 %install
-%makeinstall_std MANDIR=%{_mandir} BINDIR=%{_sbindir}
+%makeinstall_std MANDIR=%{_mandir} BINDIR=/sbin
 
 install -Dp -m 644 mdadm.conf-example %{buildroot}%{_sysconfdir}/mdadm.conf
 install -Dp %{SOURCE2} %{buildroot}%{_initrddir}/mdadm
-install -Dp %{SOURCE3} %{buildroot}%{_usrsbindir}/raid-check
+install -Dp %{SOURCE3} %{buildroot}%{_sbindir}/raid-check
 install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/raid-check
 install -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/cron.d/raid-check
-install -Dp misc/syslog-events %{buildroot}%{_sbindir}/mdadm-syslog-events
+install -Dp misc/syslog-events %{buildroot}/sbin/mdadm-syslog-events
 install -Dp -m 644 %{SOURCE6} %{buildroot}/lib/udev/rules.d/65-md-incremental.rules
 
 %if %mdvver >= 201200
@@ -95,10 +89,10 @@ systemd-tmpfiles --create %{name}.conf
 
 %files
 %doc TODO ChangeLog README.initramfs ANNOUNCE*
-%{_sbindir}/mdadm
-%{_sbindir}/mdadm-syslog-events
-%{_sbindir}/mdmon
-%{_usrsbindir}/raid-check
+/sbin/mdadm
+/sbin/mdadm-syslog-events
+/sbin/mdmon
+%{_sbindir}/raid-check
 %config(noreplace) %{_sysconfdir}/cron.d/raid-check
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/raid-check
