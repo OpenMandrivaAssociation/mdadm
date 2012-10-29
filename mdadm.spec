@@ -84,11 +84,11 @@ popd
 %setup_compile_flags
 %if %{with uclibc}
 pushd .uclibc
-make CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags}"
+%make CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags}"
 popd
 %endif
 
-make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
+%make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
 
 %install
 %if %{with uclibc}
