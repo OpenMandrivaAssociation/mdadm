@@ -1,6 +1,8 @@
+%bcond_without	uclibc
+
 Name:		mdadm
 Version:	3.2.5
-Release:	2
+Release:	3
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
 License:	GPLv2+
@@ -34,11 +36,29 @@ Requires(preun):rpm-helper
 Conflicts:	udev < 145-2
 BuildRequires:	groff
 BuildRequires:	binutils-devel
-%if %mdvver >= 201200
+%if %{mdvver} >= 201200
 BuildRequires:	systemd-units
+%endif
+%if %{with uclibc}
+BuildRequires:	uClibc-devel >= 0.9.33.2-15
 %endif
 
 %description
+mdadm is a program that can be used to create, manage, and monitor
+Linux MD (Software RAID) devices.
+
+As such is provides similar functionality to the raidtools packages.
+The particular differences to raidtools is that mdadm is a single
+program, and it can perform (almost) all functions without a
+configuration file (that a config file can be used to help with
+some common tasks).
+
+%package -n	uclibc-%{name}
+Summary:	A tool for managing Soft RAID under Linux (uClibc build)
+Group:		System/Kernel and hardware
+Requires:	%{name} = %{EVRD}
+
+%description -n	uclibc-%{name}
 mdadm is a program that can be used to create, manage, and monitor
 Linux MD (Software RAID) devices.
 
@@ -53,12 +73,29 @@ some common tasks).
 %apply_patches
 
 echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
+%if %{with uclibc}
+mkdir .uclibc
+pushd .uclibc
+cp -a ../* .
+popd
+%endif
 
 %build
 %setup_compile_flags
+%if %{with uclibc}
+pushd .uclibc
+make CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags}"
+popd
+%endif
+
 make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
 
 %install
+%if %{with uclibc}
+install -m755 .uclibc/mdadm -D %{buildroot}%{uclibc_root}/sbin/mdadm
+install -m755 .uclibc/mdmon -D %{buildroot}%{uclibc_root}/sbin/mdmon
+%endif
+
 %makeinstall_std MANDIR=%{_mandir} BINDIR=/sbin
 
 install -p -m644 mdadm.conf-example -D %{buildroot}%{_sysconfdir}/mdadm.conf
@@ -104,3 +141,9 @@ systemd-tmpfiles --create %{name}.conf
 %{_initrddir}/mdadm
 %endif
 %{_mandir}/man*/md*
+
+%if %{with uclibc}
+%files -n uclibc-%{name}
+%{uclibc_root}/sbin/mdadm
+%{uclibc_root}/sbin/mdmon
+%endif
