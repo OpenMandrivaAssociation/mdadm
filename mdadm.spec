@@ -1,8 +1,8 @@
 %bcond_without	uclibc
 
 Name:		mdadm
-Version:	3.2.5
-Release:	3
+Version:	3.2.6
+Release:	1
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
 License:	GPLv2+
@@ -11,7 +11,6 @@ Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version
 %if %{?git:0}%{?!git:1}
 Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.sign
 %endif
-Patch0:		mdadm-3.2.5-fix-build.diff
 # From Fedora, slightly modified
 Patch1:		mdadm-3.2.3-udev.patch
 # don't use -Werror flag
