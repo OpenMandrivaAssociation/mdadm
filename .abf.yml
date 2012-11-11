@@ -1,0 +1,11 @@
+sources:
+  "mdadm-3.2.6.tar.sign:"	8347ff7d9bb3523132ca5c0cf6feb1d9d5b829d8
+  "mdadm-3.2.6.tar.xz:"	b2ee8e482c71685d77f1b19c5b9730962aaec448
+  "mdadm-cron:"	dc4d0f265ac6e0152395d743c46381c029d0be96
+  "mdadm.init:"	4437e293c660703acad70595a86d8a736ff1a2d8
+  "mdadm-raid-check:"	971d11414b6ebeb5a204157f3b976b6c0863cf67
+  "mdadm-raid-check-sysconfig:"	3ba27640473a3a51f8eda4900f18d275d68decfe
+  "mdadm.rules:"	6fd29a30f6a58ace15f3b4b552db65692c642194
+  "mdadm-tmpfiles.conf:"	e3ad958d59fd50dd5750d489441d656cc64acd31
+  "mdmonitor.service:"	08e69a1dc26b863015968a74007997e08e452a5f
+  "mdmonitor-takeover.service:"	aedfa3bfdc31e3c4666261e797bc1960596dbd1e

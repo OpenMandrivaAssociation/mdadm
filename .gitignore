@@ -1,0 +1,10 @@
+mdadm-3.2.6.tar.sign
+mdadm-3.2.6.tar.xz
+mdadm-cron
+mdadm.init
+mdadm-raid-check
+mdadm-raid-check-sysconfig
+mdadm.rules
+mdadm-tmpfiles.conf
+mdmonitor.service
+mdmonitor-takeover.service
