@@ -1,0 +1,38 @@
+# This file causes block devices with Linux RAID (mdadm) signatures to
+# automatically cause mdadm to be run.
+# See udev(8) for syntax
+
+IMPORT{cmdline}="rd.md"
+ENV{rd.md}=="0", GOTO="md_imsm_inc_end"
+ENV{ANACONDA}=="?*", GOTO="md_imsm_inc_end"
+IMPORT{program}="/bin/sh -c '[ -f /dev/.in_sysinit ] && echo in_sysinit=1 || :'"
+ENV{in_sysinit}=="?*", GOTO="md_imsm_inc_end"
+SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}=="linux_raid_member", \
+	RUN+="/sbin/mdadm -I $env{DEVNAME}"
+SUBSYSTEM=="block", ACTION=="remove", ENV{ID_FS_TYPE}=="linux_raid_member", \
+	RUN+="/sbin/mdadm -If $name --path $env{ID_PATH}"
+
+IMPORT{cmdline}="noiswmd"
+IMPORT{cmdline}="nodmraid"
+IMPORT{cmdline}="rd.md.imsm"
+
+ENV{rd.md.imsm}=="0", GOTO="md_imsm_inc_end"
+ENV{noiswmd}=="?*", GOTO="md_imsm_inc_end"
+ENV{nodmraid}=="?*", GOTO="md_imsm_inc_end"
+
+# In case the initramfs only started some of the arrays in our container,
+# run incremental assembly on the container itself.  Note: we ran mdadm
+# on the container in 64-md-raid.rules, and that's how the MD_LEVEL
+# environment variable is already set.  If that disappears from the other
+# file, we will need to add this line into the middle of the next rule:
+#	IMPORT{program}="/sbin/mdadm -D --export $tempnode", \
+
+SUBSYSTEM=="block", ACTION=="add", KERNEL=="md*", \
+	ENV{MD_LEVEL}=="container", RUN+="/sbin/mdadm -I $env{DEVNAME}"
+
+SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}=="isw_raid_member", \
+	RUN+="/sbin/mdadm -I $env{DEVNAME}"
+SUBSYSTEM=="block", ACTION=="remove", ENV{ID_FS_TYPE}=="isw_raid_member", \
+	RUN+="/sbin/mdadm -If $name --path $env{ID_PATH}"
+LABEL="md_imsm_inc_end"
+
