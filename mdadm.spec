@@ -2,7 +2,7 @@
 
 Name:		mdadm
 Version:	3.2.6
-Release:	1
+Release:	2
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
 License:	GPLv2+
