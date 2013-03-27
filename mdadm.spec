@@ -34,6 +34,7 @@ Source6:	mdadm.rules
 Source7:	mdmonitor.service
 Source8:	mdmonitor-takeover.service
 Source9:	%{name}-tmpfiles.conf
+Source10:	mdadm_event.conf
 #
 Requires(post):	rpm-helper
 Requires(preun):rpm-helper
@@ -119,6 +120,8 @@ install -m644 %{SOURCE9} -D %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
 rm -rf %{buildroot}%{_initrddir}/mdadm
 %endif
 
+install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
+
 %post
 %if %{mdvver} >= 201200
 systemd-tmpfiles --create %{name}.conf
@@ -145,6 +148,7 @@ systemd-tmpfiles --create %{name}.conf
 %else
 %{_initrddir}/mdadm
 %endif
+%{_sysconfdir}/libreport/events.d/*
 %{_mandir}/man*/md*
 
 %if %{with uclibc}
