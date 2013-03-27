@@ -11,6 +11,25 @@
 [ -f /etc/sysconfig/raid-check ] || exit 0
 . /etc/sysconfig/raid-check
 
+# Wait until no more than arg1 arrays in arg2 list are busy
+waitbusy() {
+    local threshold=$(($1 + 1))
+    local dev_list="$2"
+    while true
+    do
+	local busy=0
+	local dev=""
+	for dev in $dev_list; do
+	    local sync_action=`cat /sys/block/$dev/md/sync_action`
+	    if [ "$sync_action" != "idle" ]; then
+		let busy++
+	    fi
+	done
+        [ $busy -lt $threshold ] && break
+	sleep 60
+    done
+}
+
 [ "$ENABLED" != "yes" ] && exit 0
 
 case "$CHECK" in
@@ -70,6 +89,10 @@ done
 [ -z "$dev_list" ] && exit 0
 
 for dev in $dev_list; do
+    #Only run $MAXCONCURRENT checks at a time
+    if [ -n "$MAXCONCURRENT" ]; then
+	waitbusy $((MAXCONCURRENT - 1)) "$dev_list"
+    fi
     echo "${check[$dev]}" > /sys/block/$dev/md/sync_action
 
     resync_pid=""
@@ -86,18 +109,8 @@ for dev in $dev_list; do
 done
 [ -z "$check_list" ] && exit 0
 
-checking=1
-while [ $checking -ne 0 ]
-do
-	sleep 60
-	checking=0
-	for dev in $check_list; do
-	sync_action=`cat /sys/block/$dev/md/sync_action`
-		if [ "$sync_action" != "idle" ]; then
-			checking=1
-		fi
-	done
-done
+waitbusy 0 "$check_list"
+
 for dev in $check_list; do
 	mismatch_cnt=`cat /sys/block/$dev/md/mismatch_cnt`
 	# Due to the fact that raid1/10 writes in the kernel are unbuffered,

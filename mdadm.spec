@@ -2,7 +2,7 @@
 
 Name:		mdadm
 Version:	3.2.6
-Release:	2
+Release:	3
 Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
 License:	GPLv2+
@@ -15,15 +15,21 @@ Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.s
 Patch1:		mdadm-3.2.3-udev.patch
 # don't use -Werror flag
 Patch2:		mdadm-3.2.4-mdv-no_werror.patch
+
+# Fedora patches
+Patch101:	mdadm-3.2.6-Create.c-check-if-freesize-is-equal-0.patch
+Patch102:	mdadm-3.2.6-imsm-Forbid-spanning-between-multiple-controllers.patch
+Patch193:	mdadm-3.2.6-Remove-offroot-argument-and-default-to-always-settin.patch
+Patch194:	mdadm-3.2.6-Add-support-for-launching-mdmon-via-systemctl-instea.patch
+Patch195:	mdadm-3.2.6-In-case-launching-mdmon-fails-print-an-error-message.patch
+Patch196:	mdadm-3.2.6-mdmon-add-foreground-option.patch
+
 # From Fedora, slightly modified
 Source2:	mdadm.init
 # From Fedora
 Source3:	mdadm-raid-check
 Source4:	mdadm-raid-check-sysconfig
 Source5:	mdadm-cron
-# From Fedora, modified because our initscripts do not use incremental assembly
-# modification can be reverted only _after_ initscripts has been fixed and a
-# conflict for older inistcripts is added (bluca)
 Source6:	mdadm.rules
 Source7:	mdmonitor.service
 Source8:	mdmonitor-takeover.service

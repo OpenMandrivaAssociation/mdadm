@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Configuration file for /etc/cron.weekly/raid-check
 #
 # options:
@@ -29,9 +31,11 @@
 #	REPAIR_DEVS - a space delimited list of devs that the user
 #		specifically wants to run a repair on.
 #	SKIP_DEVS - a space delimited list of devs that should be skipped
-#       NICE - Change the raid check CPU and IO priority in order to make
+#	NICE - Change the raid check CPU and IO priority in order to make
 #		the system more responsive during lengthy checks.  Valid
 #		values are high, normal, low, idle.
+#	MAXCONCURENT - Limit the number of devices to be checked at a time.
+#		By default all devices will be checked at the same time.
 #
 # Note: the raid-check script intentionaly runs last in the cron.weekly
 # sequence.  This is so we can wait for all the resync operations to complete
@@ -53,3 +57,4 @@ NICE=low
 CHECK_DEVS=""
 REPAIR_DEVS=""
 SKIP_DEVS=""
+MAXCONCURRENT=
