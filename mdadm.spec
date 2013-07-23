@@ -1,16 +1,27 @@
 %bcond_without	uclibc
 
+Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	3.2.6
 Release:	3
-Summary:	A tool for managing Soft RAID under Linux
 Group:		System/Kernel and hardware
 License:	GPLv2+
-URL:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
+Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
 Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version}%{?git:%git}.tar.xz
 %if %{?git:0}%{?!git:1}
 Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.sign
 %endif
+# From Fedora, slightly modified
+Source2:	mdadm.init
+# From Fedora
+Source3:	mdadm-raid-check
+Source4:	mdadm-raid-check-sysconfig
+Source5:	mdadm-cron
+Source6:	mdadm.rules
+Source7:	mdmonitor.service
+Source8:	mdmonitor-takeover.service
+Source9:	%{name}-tmpfiles.conf
+Source10:	mdadm_event.conf
 # From Fedora, slightly modified
 Patch1:		mdadm-3.2.3-udev.patch
 # don't use -Werror flag
@@ -24,22 +35,7 @@ Patch194:	mdadm-3.2.6-Add-support-for-launching-mdmon-via-systemctl-instea.patch
 Patch195:	mdadm-3.2.6-In-case-launching-mdmon-fails-print-an-error-message.patch
 Patch196:	mdadm-3.2.6-mdmon-add-foreground-option.patch
 
-# From Fedora, slightly modified
-Source2:	mdadm.init
-# From Fedora
-Source3:	mdadm-raid-check
-Source4:	mdadm-raid-check-sysconfig
-Source5:	mdadm-cron
-Source6:	mdadm.rules
-Source7:	mdmonitor.service
-Source8:	mdmonitor-takeover.service
-Source9:	%{name}-tmpfiles.conf
-Source10:	mdadm_event.conf
-#
-Requires(post):	rpm-helper
-Requires(preun):rpm-helper
 # udev rule used to be in udev package
-Conflicts:	udev < 145-2
 BuildRequires:	groff
 BuildRequires:	binutils-devel
 %if %{mdvver} >= 201200
@@ -48,6 +44,7 @@ BuildRequires:	systemd-units
 %if %{with uclibc}
 BuildRequires:	uClibc-devel >= 0.9.33.2-15
 %endif
+Requires(post,preun):	rpm-helper
 
 %description
 mdadm is a program that can be used to create, manage, and monitor
@@ -156,3 +153,4 @@ systemd-tmpfiles --create %{name}.conf
 %{uclibc_root}/sbin/mdadm
 %{uclibc_root}/sbin/mdmon
 %endif
+
