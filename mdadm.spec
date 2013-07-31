@@ -3,7 +3,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	3.2.6
-Release:	3
+Release:	4
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -26,6 +26,9 @@ Source10:	mdadm_event.conf
 Patch1:		mdadm-3.2.3-udev.patch
 # don't use -Werror flag
 Patch2:		mdadm-3.2.4-mdv-no_werror.patch
+# in situations where only ntfw and not ftw is enabled with uClibc, it's
+# assumed to have neither, which this patch fixes
+Patch3:		mdadm-3.2.7-uclibc-make-ntfw-work-without-ftw-enabled.patch
 
 # Fedora patches
 Patch101:	mdadm-3.2.6-Create.c-check-if-freesize-is-equal-0.patch
