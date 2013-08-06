@@ -24,8 +24,6 @@ Source9:	%{name}-tmpfiles.conf
 Source10:	mdadm_event.conf
 # From Fedora, slightly modified
 Patch1:		mdadm-3.2.3-udev.patch
-# don't use -Werror flag
-Patch2:		mdadm-3.2.4-mdv-no_werror.patch
 # in situations where only ntfw and not ftw is enabled with uClibc, it's
 # assumed to have neither, which this patch fixes
 Patch3:		mdadm-3.2.7-uclibc-make-ntfw-work-without-ftw-enabled.patch
@@ -90,11 +88,11 @@ popd
 %setup_compile_flags
 %if %{with uclibc}
 pushd .uclibc
-%make CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags}"
+%make CWFLAGS=-Wall CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags}"
 popd
 %endif
 
-%make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
+%make CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
 
 %install
 %if %{with uclibc}
