@@ -3,7 +3,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	3.2.6
-Release:	8
+Release:	9
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -22,8 +22,11 @@ Source9:	%{name}-tmpfiles.conf
 Source10:	mdadm_event.conf
 # From Fedora, slightly modified
 Patch1:		mdadm-3.2.3-udev.patch
-# don't use -Werror flag
-Patch2:		mdadm-3.2.4-mdv-no_werror.patch
+# in situations where only ntfw and not ftw is enabled with uClibc, it's
+# assumed to have neither, which this patch fixes
+Patch3:		mdadm-3.2.7-uclibc-make-ntfw-work-without-ftw-enabled.patch
+# add support for compiling with -fwhole-program
+Patch4:		mdadm-3.2.6-whole-program.patch
 
 # Fedora patches
 Patch101:	mdadm-3.2.6-Create.c-check-if-freesize-is-equal-0.patch
@@ -83,11 +86,11 @@ popd
 %setup_compile_flags
 %if %{with uclibc}
 pushd .uclibc
-%make CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags}"
+make WHOLE_PROGRAM=1 CWFLAGS=-Wall CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags}"
 popd
 %endif
 
-%make SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
+%make WHOLE_PROGRAM=1 CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
 
 %install
 %if %{with uclibc}

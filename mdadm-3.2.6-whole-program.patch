@@ -1,0 +1,30 @@
+--- mdadm-3.2.6/Makefile.whole_prog~	2013-08-07 23:10:46.638191463 +0200
++++ mdadm-3.2.6/Makefile	2013-08-07 23:10:50.391245507 +0200
+@@ -149,8 +149,13 @@ everything-test: all mdadm.static swap_s
+ # mdadm.uclibc and mdassemble.uclibc don't work on x86-64
+ # mdadm.tcc doesn't work..
+ 
++ifdef WHOLE_PROGRAM
++mdadm : $(SRCS)
++	$(CC) $(CFLAGS) $(LDFLAGS) -fwhole-program -Wl,--no-warn-common -flto -o mdadm $(SRCS) $(LDLIBS)
++else
+ mdadm : $(OBJS)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o mdadm $(OBJS) $(LDLIBS)
++endif
+ 
+ mdadm.static : $(OBJS) $(STATICOBJS)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -static -o mdadm.static $(OBJS) $(STATICOBJS)
+@@ -172,8 +177,13 @@ mdmon.O2 : $(MON_SRCS) $(INCL) mdmon.h
+ 	$(CC) -o mdmon.O2 $(CFLAGS) $(LDFLAGS) $(MON_LDFLAGS) -DHAVE_STDINT_H -O2 -D_FORTIFY_SOURCE=2 $(MON_SRCS)
+ 
+ # use '-z now' to guarantee no dynamic linker interactions with the monitor thread
++ifdef WHOLE_PROGRAM
++mdmon : $(MON_SRCS)
++	$(CC) $(CFLAGS) $(LDFLAGS) $(MON_LDFLAGS) -Wl,-z,now -Wl,--no-warn-common -fwhole-program -flto -o mdmon $(MON_SRCS) $(LDLIBS)
++else
+ mdmon : $(MON_OBJS)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) $(MON_LDFLAGS) -Wl,-z,now -o mdmon $(MON_OBJS) $(LDLIBS)
++endif
+ msg.o: msg.c msg.h
+ 
+ test_stripe : restripe.c mdadm.h
