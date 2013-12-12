@@ -2,8 +2,8 @@
 
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
-Version:	3.2.6
-Release:	8
+Version:	3.3
+Release:	1
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -20,21 +20,15 @@ Source7:	mdmonitor.service
 Source8:	mdmonitor-takeover.service
 Source9:	%{name}-tmpfiles.conf
 Source10:	mdadm_event.conf
-# From Fedora, slightly modified
-Patch1:		mdadm-3.2.3-udev.patch
 # in situations where only ntfw and not ftw is enabled with uClibc, it's
 # assumed to have neither, which this patch fixes
 Patch3:		mdadm-3.2.7-uclibc-make-ntfw-work-without-ftw-enabled.patch
 # add support for compiling with -fwhole-program
-Patch4:		mdadm-3.2.6-whole-program.patch
+Patch4:		mdadm-3.3-whole-program.patch
 
 # Fedora patches
-Patch101:	mdadm-3.2.6-Create.c-check-if-freesize-is-equal-0.patch
-Patch102:	mdadm-3.2.6-imsm-Forbid-spanning-between-multiple-controllers.patch
-Patch193:	mdadm-3.2.6-Remove-offroot-argument-and-default-to-always-settin.patch
-Patch194:	mdadm-3.2.6-Add-support-for-launching-mdmon-via-systemctl-instea.patch
-Patch195:	mdadm-3.2.6-In-case-launching-mdmon-fails-print-an-error-message.patch
-Patch196:	mdadm-3.2.6-mdmon-add-foreground-option.patch
+Patch101:	mdadm-3.3-Be-consistent-in-return-types-from-byteswap-macros.patch
+Patch197:	mdadm-3.3-udev.patch
 
 # udev rule used to be in udev package
 BuildRequires:	groff
@@ -98,7 +92,10 @@ install -m755 .uclibc/mdadm -D %{buildroot}%{uclibc_root}/sbin/mdadm
 install -m755 .uclibc/mdmon -D %{buildroot}%{uclibc_root}/sbin/mdmon
 %endif
 
-%makeinstall_std MANDIR=%{_mandir} BINDIR=/sbin
+make install-man install-udev DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=/sbin
+install -m755 mdadm -D %{buildroot}/sbin/mdadm
+install -m755 mdmon -D %{buildroot}/sbin/mdmon
+
 
 install -p -m644 mdadm.conf-example -D %{buildroot}%{_sysconfdir}/mdadm.conf
 install -p -m755 %{SOURCE3} -D %{buildroot}%{_sbindir}/raid-check
@@ -131,7 +128,8 @@ systemd-tmpfiles --create %{name}.conf
 %config(noreplace) %{_sysconfdir}/cron.d/raid-check
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/raid-check
-/lib/udev/rules.d/64-md-raid.rules
+/lib/udev/rules.d/63-md-raid-arrays.rules
+/lib/udev/rules.d/64-md-raid-assembly.rules
 /lib/udev/rules.d/65-md-incremental.rules
 %{_unitdir}/*.service
 %{_prefix}/lib/tmpfiles.d/%{name}.conf
