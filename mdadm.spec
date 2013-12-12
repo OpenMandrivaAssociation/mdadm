@@ -3,7 +3,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	3.2.6
-Release:	5
+Release:	8
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -11,8 +11,6 @@ Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version
 %if %{?git:0}%{?!git:1}
 Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.sign
 %endif
-# From Fedora, slightly modified
-Source2:	mdadm.init
 # From Fedora
 Source3:	mdadm-raid-check
 Source4:	mdadm-raid-check-sysconfig
@@ -41,9 +39,7 @@ Patch196:	mdadm-3.2.6-mdmon-add-foreground-option.patch
 # udev rule used to be in udev package
 BuildRequires:	groff
 BuildRequires:	binutils-devel
-%if %{mdvver} >= 201200
 BuildRequires:	systemd-units
-%endif
 %if %{with uclibc}
 BuildRequires:	uClibc-devel >= 0.9.33.2-15
 %endif
@@ -105,27 +101,22 @@ install -m755 .uclibc/mdmon -D %{buildroot}%{uclibc_root}/sbin/mdmon
 %makeinstall_std MANDIR=%{_mandir} BINDIR=/sbin
 
 install -p -m644 mdadm.conf-example -D %{buildroot}%{_sysconfdir}/mdadm.conf
-install -p -m755 %{SOURCE2} -D %{buildroot}%{_initrddir}/mdadm
 install -p -m755 %{SOURCE3} -D %{buildroot}%{_sbindir}/raid-check
 install -p -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/sysconfig/raid-check
 install -p -m644 %{SOURCE5} -D %{buildroot}%{_sysconfdir}/cron.d/raid-check
 install -p -m755 misc/syslog-events -D %{buildroot}/sbin/mdadm-syslog-events
 install -p -m644 %{SOURCE6} -D %{buildroot}/lib/udev/rules.d/65-md-incremental.rules
 
-%if %{mdvver} >= 201200
 install -m644 %{SOURCE7} -D %{buildroot}%{_unitdir}/mdmonitor.service
 install -m644 %{SOURCE8} -D %{buildroot}%{_unitdir}/mdmonitor-takeover.service
 ln -s mdmonitor.service %{buildroot}%{_unitdir}/mdadm.service
 install -m644 %{SOURCE9} -D %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
 rm -rf %{buildroot}%{_initrddir}/mdadm
-%endif
 
 install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
 
 %post
-%if %{mdvver} >= 201200
 systemd-tmpfiles --create %{name}.conf
-%endif
 %_post_service mdadm
 
 %preun
@@ -142,12 +133,8 @@ systemd-tmpfiles --create %{name}.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/raid-check
 /lib/udev/rules.d/64-md-raid.rules
 /lib/udev/rules.d/65-md-incremental.rules
-%if %{mdvver} >= 201200
 %{_unitdir}/*.service
 %{_prefix}/lib/tmpfiles.d/%{name}.conf
-%else
-%{_initrddir}/mdadm
-%endif
 %{_sysconfdir}/libreport/events.d/*
 %{_mandir}/man*/md*
 
@@ -156,4 +143,3 @@ systemd-tmpfiles --create %{name}.conf
 %{uclibc_root}/sbin/mdadm
 %{uclibc_root}/sbin/mdmon
 %endif
-
