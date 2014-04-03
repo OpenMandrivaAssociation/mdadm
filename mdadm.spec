@@ -116,13 +116,6 @@ rm -rf %{buildroot}%{_initrddir}/mdadm
 
 install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
 
-%post
-systemd-tmpfiles --create %{name}.conf
-%_post_service mdadm
-
-%preun
-%_preun_service mdadm
-
 %files
 %doc TODO ChangeLog README.initramfs ANNOUNCE*
 /sbin/mdadm
