@@ -3,7 +3,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	3.3
-Release:	1
+Release:	2
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -18,7 +18,7 @@ Source5:	mdadm-cron
 Source6:	mdadm.rules
 Source7:	mdmonitor.service
 Source8:	mdmonitor-takeover.service
-Source9:	%{name}-tmpfiles.conf
+Source9:	mdadm-tmpfiles.conf
 Source10:	mdadm_event.conf
 # in situations where only ntfw and not ftw is enabled with uClibc, it's
 # assumed to have neither, which this patch fixes
@@ -28,6 +28,10 @@ Patch4:		mdadm-3.3-whole-program.patch
 
 # Fedora patches
 Patch101:	mdadm-3.3-Be-consistent-in-return-types-from-byteswap-macros.patch
+Patch193:	mdadm-3.2.6-Remove-offroot-argument-and-default-to-always-settin.patch
+Patch194:	mdadm-3.2.6-Add-support-for-launching-mdmon-via-systemctl-instea.patch
+Patch195:	mdadm-3.2.6-In-case-launching-mdmon-fails-print-an-error-message.patch
+Patch196:	mdadm-3.2.6-mdmon-add-foreground-option.patch
 Patch197:	mdadm-3.3-udev.patch
 
 # udev rule used to be in udev package
