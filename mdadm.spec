@@ -28,10 +28,6 @@ Patch4:		mdadm-3.3-whole-program.patch
 
 # Fedora patches
 Patch101:	mdadm-3.3-Be-consistent-in-return-types-from-byteswap-macros.patch
-Patch193:	mdadm-3.2.6-Remove-offroot-argument-and-default-to-always-settin.patch
-Patch194:	mdadm-3.2.6-Add-support-for-launching-mdmon-via-systemctl-instea.patch
-Patch195:	mdadm-3.2.6-In-case-launching-mdmon-fails-print-an-error-message.patch
-Patch196:	mdadm-3.2.6-mdmon-add-foreground-option.patch
 Patch197:	mdadm-3.3-udev.patch
 
 # udev rule used to be in udev package
