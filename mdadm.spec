@@ -84,7 +84,11 @@ make WHOLE_PROGRAM=1 CWFLAGS=-Wall CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}"
 popd
 %endif
 
+%ifnarch aarch64
 %make WHOLE_PROGRAM=1 CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
+%else
+%make WHOLE_PROGRAM=0 CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
+%endif
 
 %install
 %if %{with uclibc}
