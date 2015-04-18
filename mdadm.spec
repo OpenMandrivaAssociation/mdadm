@@ -80,14 +80,14 @@ popd
 %setup_compile_flags
 %if %{with uclibc}
 pushd .uclibc
-make WHOLE_PROGRAM=1 CWFLAGS=-Wall CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags}"
+make WHOLE_PROGRAM=1 CWFLAGS=-Wall CC="%{uclibc_cc}" SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{uclibc_cflags} -fno-strict-aliasing" mdadm mdmon
 popd
 %endif
 
 %ifnarch aarch64
-%make WHOLE_PROGRAM=1 CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
+%make WHOLE_PROGRAM=1 CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags} -fno-strict-aliasing"
 %else
-%make WHOLE_PROGRAM=0 CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags}"
+%make WHOLE_PROGRAM=0 CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags} -fno-strict-aliasing"
 %endif
 
 %install
