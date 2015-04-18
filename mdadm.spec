@@ -24,11 +24,10 @@ Source10:	mdadm_event.conf
 # assumed to have neither, which this patch fixes
 Patch3:		mdadm-3.2.7-uclibc-make-ntfw-work-without-ftw-enabled.patch
 # add support for compiling with -fwhole-program
-Patch4:		mdadm-3.3-whole-program.patch
+Patch4:		mdadm-3.3.2-whole-program.patch
 
 # Fedora patches
-Patch101:	mdadm-3.3-Be-consistent-in-return-types-from-byteswap-macros.patch
-Patch197:	mdadm-3.3-udev.patch
+Patch197:	mdadm-3.3.2-udev.patch
 
 # udev rule used to be in udev package
 BuildRequires:	groff
