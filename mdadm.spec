@@ -2,8 +2,8 @@
 
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
-Version:	3.3
-Release:	6
+Version:	3.3.2
+Release:	1
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
