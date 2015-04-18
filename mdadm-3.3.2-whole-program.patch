@@ -1,12 +1,12 @@
 --- mdadm-3.3.2/Makefile.0004~	2014-08-21 12:16:56.000000000 +0200
-+++ mdadm-3.3.2/Makefile	2015-04-19 01:06:09.098404959 +0200
++++ mdadm-3.3.2/Makefile	2015-04-19 01:26:17.596539572 +0200
 @@ -172,8 +172,13 @@ everything-test: all mdadm.static swap_s
  # mdadm.uclibc and mdassemble.uclibc don't work on x86-64
  # mdadm.tcc doesn't work..
  
 +ifdef WHOLE_PROGRAM
 +mdadm : check_rundir $(SRCS)
-+	$(CC) $(CFLAGS) $(LDFLAGS) -fwhole-program -Wl,--no-warn-common -flto -o mdadm $(SRCS) $(LDLIBS)
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -fwhole-program -Wl,--no-warn-common -flto -o mdadm $(SRCS) $(LDLIBS)
 +else
  mdadm : check_rundir $(OBJS)
  	$(CC) $(CFLAGS) $(LDFLAGS) -o mdadm $(OBJS) $(LDLIBS)
@@ -20,7 +20,7 @@
  # use '-z now' to guarantee no dynamic linker interactions with the monitor thread
 +ifdef WHOLE_PROGRAM
 +mdmon : check_rundir $(MON_SRCS)
-+	$(CC) $(CFLAGS) $(LDFLAGS) $(MON_LDFLAGS) -Wl,-z,now -Wl,--no-warn-common -fwhole-program -flto -o mdmon $(MON_SRCS) $(LDLIBS)
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(MON_LDFLAGS) -Wl,-z,now -Wl,--no-warn-common -fwhole-program -flto -o mdmon $(MON_SRCS) $(LDLIBS)
 +else
  mdmon : check_rundir $(MON_OBJS)
  	$(CC) $(CFLAGS) $(LDFLAGS) $(MON_LDFLAGS) -Wl,-z,now -o mdmon $(MON_OBJS) $(LDLIBS)

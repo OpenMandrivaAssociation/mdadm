@@ -25,6 +25,7 @@ Source10:	mdadm_event.conf
 Patch3:		mdadm-3.2.7-uclibc-make-ntfw-work-without-ftw-enabled.patch
 # add support for compiling with -fwhole-program
 Patch4:		mdadm-3.3.2-whole-program.patch
+Patch5:		mdadm-3.3.2-byteswap.patch
 
 # Fedora patches
 Patch197:	mdadm-3.3.2-udev.patch
@@ -105,13 +106,12 @@ install -p -m755 %{SOURCE3} -D %{buildroot}%{_sbindir}/raid-check
 install -p -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/sysconfig/raid-check
 install -p -m644 %{SOURCE5} -D %{buildroot}%{_sysconfdir}/cron.d/raid-check
 install -p -m755 misc/syslog-events -D %{buildroot}/sbin/mdadm-syslog-events
-install -p -m644 %{SOURCE6} -D %{buildroot}/lib/udev/rules.d/65-md-incremental.rules
+install -p -m644 %{SOURCE6} -D %{buildroot}%{_udevrulesdir}/65-md-incremental.rules
 
 install -m644 %{SOURCE7} -D %{buildroot}%{_unitdir}/mdmonitor.service
 install -m644 %{SOURCE8} -D %{buildroot}%{_unitdir}/mdmonitor-takeover.service
 ln -s mdmonitor.service %{buildroot}%{_unitdir}/mdadm.service
-install -m644 %{SOURCE9} -D %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
-rm -rf %{buildroot}%{_initrddir}/mdadm
+install -m644 %{SOURCE9} -D %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
 install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
 
@@ -124,11 +124,11 @@ install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm
 %config(noreplace) %{_sysconfdir}/cron.d/raid-check
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/raid-check
-/lib/udev/rules.d/63-md-raid-arrays.rules
-/lib/udev/rules.d/64-md-raid-assembly.rules
-/lib/udev/rules.d/65-md-incremental.rules
+%{_udevrulesdir}/63-md-raid-arrays.rules
+%{_udevrulesdir}/64-md-raid-assembly.rules
+%{_udevrulesdir}/65-md-incremental.rules
 %{_unitdir}/*.service
-%{_prefix}/lib/tmpfiles.d/%{name}.conf
+%{_tmpfilesdir}/%{name}.conf
 %{_sysconfdir}/libreport/events.d/*
 %{_mandir}/man*/md*
 
