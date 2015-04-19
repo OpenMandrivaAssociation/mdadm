@@ -26,6 +26,7 @@ Patch3:		mdadm-3.2.7-uclibc-make-ntfw-work-without-ftw-enabled.patch
 # add support for compiling with -fwhole-program
 Patch4:		mdadm-3.3.2-whole-program.patch
 Patch5:		mdadm-3.3.2-byteswap.patch
+Patch6:		gcc-4.9.patch
 
 # Fedora patches
 Patch197:	mdadm-3.3.2-udev.patch
