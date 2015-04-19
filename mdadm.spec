@@ -60,7 +60,6 @@ BuildRequires:	systemd-units
 %if %{with uclibc}
 BuildRequires:	uClibc-devel >= 0.9.33.2-15
 %endif
-Requires(post,preun):	rpm-helper
 Requires:	libreport-filesystem
 
 %description
