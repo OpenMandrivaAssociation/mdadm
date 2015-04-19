@@ -119,7 +119,7 @@ install -m755 .uclibc/mdadm -D %{buildroot}%{uclibc_root}/sbin/mdadm
 install -m755 .uclibc/mdmon -D %{buildroot}%{uclibc_root}/sbin/mdmon
 %endif
 
-make install-man install-udev DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=/sbin
+make install-man install-udev DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=/sbin SYSTEMD_DIR=%{_unitdir} install-systemd
 install -m755 mdadm -D %{buildroot}/sbin/mdadm
 install -m755 mdmon -D %{buildroot}/sbin/mdmon
 
@@ -132,8 +132,6 @@ install -p -m755 misc/syslog-events -D %{buildroot}/sbin/mdadm-syslog-events
 install -p -m644 %{SOURCE6} -D %{buildroot}%{_udevrulesdir}/65-md-incremental.rules
 
 install -m644 %{SOURCE7} -D %{buildroot}%{_unitdir}/mdmonitor.service
-install -m644 %{SOURCE8} -D %{buildroot}%{_unitdir}/mdmonitor-takeover.service
-ln -s mdmonitor.service %{buildroot}%{_unitdir}/mdadm.service
 install -m644 %{SOURCE9} -D %{buildroot}%{_tmpfilesdir}/%{name}.conf
 
 install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
@@ -151,6 +149,8 @@ install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm
 %{_udevrulesdir}/64-md-raid-assembly.rules
 %{_udevrulesdir}/65-md-incremental.rules
 %{_unitdir}/*.service
+%{_unitdir}/*.timer
+%{_systemshutdowndir}/mdadm.shutdown
 %{_tmpfilesdir}/%{name}.conf
 %{_sysconfdir}/libreport/events.d/*
 %{_mandir}/man*/md*
