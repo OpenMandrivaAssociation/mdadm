@@ -30,6 +30,29 @@ Patch5:		mdadm-3.3.2-byteswap.patch
 # Fedora patches
 Patch197:	mdadm-3.3.2-udev.patch
 
+# Upstream backports
+Patch1000:	0001-update-add-bbl-and-no-bbl-to-the-list-of-known-updat.patch
+Patch1001:	0001-Grow-Report-when-grow-needs-metadata-update.patch
+Patch1002:	0001-mdmon-already-read-sysfs-files-once-after-opening.patch
+Patch1003:	0001-Grow-fix-resize-of-array-component-size-to-32bits.patch
+Patch1004:	0001-mdcheck-don-t-git-error-if-not-dev-md-devices-exist.patch
+Patch1005:	0001-Rebuildmap-strip-local-host-name-from-device-name.patch
+Patch1007:	0001-Detail-fix-handling-of-disks-array.patch
+Patch1008:	0001-Incremental-don-t-be-distracted-by-partition-table-w.patch
+Patch1009:	0001-imsm-support-for-OROMs-shared-by-multiple-HBAs.patch
+Patch1010:	0001-imsm-support-for-second-and-combined-AHCI-controller.patch
+Patch1011:	0001-imsm-add-support-for-NVMe-devices.patch
+Patch1012:	0001-imsm-detail-platform-improvements.patch
+Patch1013:	0001-imsm-use-efivarfs-interface-for-reading-UEFI-variabl.patch
+Patch1014:	0001-Monitor-don-t-open-md-array-that-doesn-t-exist.patch
+Patch1015:	0001-Grow-Fix-wrong-goto-in-set_new_data_offset.patch
+Patch1016:	0001-util-remove-rounding-error-where-reporting-human-siz.patch
+Patch1017:	0001-IMSM-Clear-migration-record-on-disks-more-often.patch
+Patch1018:	0001-mdcheck-be-careful-when-sourcing-the-output-of-mdadm.patch
+Patch1019:	0001-Monitor-fix-for-regression-with-container-devices.patch
+Patch1020:	0001-Grow.c-Fix-classic-readlink-buffer-overflow.patch
+Patch1021:	0001-IncrementalScan-Make-sure-st-is-valid-before-derefer.patch
+
 # udev rule used to be in udev package
 BuildRequires:	groff
 BuildRequires:	binutils-devel

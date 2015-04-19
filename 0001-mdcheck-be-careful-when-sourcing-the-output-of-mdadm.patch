@@ -1,0 +1,33 @@
+From 979b1feb093b1c2e0f8b58716329f2da092741d4 Mon Sep 17 00:00:00 2001
+From: NeilBrown <neilb@suse.de>
+Date: Wed, 4 Feb 2015 09:06:47 +1100
+Subject: [PATCH] mdcheck: be careful when sourcing the output of "mdadm
+ --detail --export"
+
+The output of "mdadm --detail --export" isn't quoted properly so
+fields that contain spaces can be a problem.
+We only want the MD_UUID field, and it has a very well defined
+format with no spaces.
+So use 'grep' to limit the output to just that.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ misc/mdcheck | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/misc/mdcheck b/misc/mdcheck
+index ca5fe84..2c8f54d 100644
+--- a/misc/mdcheck
++++ b/misc/mdcheck
+@@ -88,7 +88,7 @@ do
+ 		continue
+ 	fi
+ 
+-	mdadm --detail --export "$dev" > $tmp || continue
++	mdadm --detail --export "$dev" | grep '^MD_UUID=' > $tmp || continue
+ 	source $tmp
+ 	fl="/var/lib/mdcheck/MD_UUID_$MD_UUID"
+ 	if [ -z "$cont" ]
+-- 
+2.3.4
+

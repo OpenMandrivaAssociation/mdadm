@@ -1,0 +1,46 @@
+From 19d3ea0f0b4decef347770b9b0d1a74fba4f7776 Mon Sep 17 00:00:00 2001
+From: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+Date: Mon, 9 Feb 2015 11:13:50 +0100
+Subject: [PATCH] Monitor: fix for regression with container devices
+
+This patch fixes 2 problems introduced by commit 9a518d8: not closing a
+file descriptor and ignoring container devices. Array state is always
+"inactive" for containers, so we make sure that the device is not a
+container by reading also the "level" sysfs entry.
+
+Signed-off-by: Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+Reviewed-by: Pawel Baldysiak <pawel.baldysiak@intel.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ Monitor.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/Monitor.c b/Monitor.c
+index 971d2ec..66d67ba 100644
+--- a/Monitor.c
++++ b/Monitor.c
+@@ -483,11 +483,17 @@ static int check_array(struct state *st, struct mdstat_ent *mdstat,
+ 		    strncmp(buf,"inact",5) == 0) {
+ 			if (fd >= 0)
+ 				close(fd);
+-			if (!st->err)
+-				alert("DeviceDisappeared", dev, NULL, ainfo);
+-			st->err++;
+-			return 0;
++			fd = sysfs_open(st->devnm, NULL, "level");
++			if (fd < 0 || read(fd, buf, 10) != 0) {
++				if (fd >= 0)
++					close(fd);
++				if (!st->err)
++					alert("DeviceDisappeared", dev, NULL, ainfo);
++				st->err++;
++				return 0;
++			}
+ 		}
++		close(fd);
+ 	}
+ 	fd = open(dev, O_RDONLY);
+ 	if (fd < 0) {
+-- 
+2.3.4
+

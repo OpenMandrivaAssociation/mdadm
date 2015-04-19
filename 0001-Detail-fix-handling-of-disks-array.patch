@@ -1,0 +1,56 @@
+From 8057db46a15daba1c954352fe19cfa7c9c6a6805 Mon Sep 17 00:00:00 2001
+From: NeilBrown <neilb@suse.de>
+Date: Tue, 4 Nov 2014 09:35:20 +1100
+Subject: [PATCH] Detail: fix handling of 'disks' array.
+
+Since the introduction of replacement devices, we reserve
+to places in the "disks" array for each raid disk.
+That means we should allocate to twice "max_disk" as the array
+could have that many raid_disks (though that would limit the
+number of replacements).
+
+A couple of other places need to use "max_disks*2" instead of
+"max_disks" to co-ordinate with this.
+
+Reported-by: Or Sagi <ors@reduxio.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ Detail.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Detail.c b/Detail.c
+index c4fcad9..dd72ede 100644
+--- a/Detail.c
++++ b/Detail.c
+@@ -295,8 +295,8 @@ int Detail(char *dev, struct context *c)
+ 		goto out;
+ 	}
+ 
+-	disks = xmalloc(max_disks * sizeof(mdu_disk_info_t));
+-	for (d = 0; d < max_disks; d++) {
++	disks = xmalloc(max_disks * 2 * sizeof(mdu_disk_info_t));
++	for (d = 0; d < max_disks * 2; d++) {
+ 		disks[d].state = (1<<MD_DISK_REMOVED);
+ 		disks[d].major = disks[d].minor = 0;
+ 		disks[d].number = disks[d].raid_disk = d;
+@@ -327,7 +327,7 @@ int Detail(char *dev, struct context *c)
+ 		else if (disk.raid_disk >= 0 && disk.raid_disk < array.raid_disks
+ 			 && disks[disk.raid_disk*2+1].state == (1<<MD_DISK_REMOVED))
+ 			disks[disk.raid_disk*2+1] = disk;
+-		else if (next < max_disks)
++		else if (next < max_disks*2)
+ 			disks[next++] = disk;
+ 	}
+ 
+@@ -602,7 +602,7 @@ This is pretty boring
+ 	}
+ 	free(info);
+ 
+-	for (d= 0; d < max_disks; d++) {
++	for (d= 0; d < max_disks * 2; d++) {
+ 		char *dv;
+ 		mdu_disk_info_t disk = disks[d];
+ 
+-- 
+2.3.4
+

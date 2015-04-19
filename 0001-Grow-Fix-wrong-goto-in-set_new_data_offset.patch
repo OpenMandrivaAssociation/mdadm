@@ -1,0 +1,36 @@
+From 16afb1a5efb59b45db9ee46dad7cc410aabbe90e Mon Sep 17 00:00:00 2001
+From: Pawel Baldysiak <pawel.baldysiak@intel.com>
+Date: Thu, 27 Nov 2014 12:35:24 +0100
+Subject: [PATCH] Grow: Fix wrong 'goto' in set_new_data_offset
+
+Commit a821c95f114724b38df1ea99b2858178e0ed28ce
+besides introducing additional message, also changed
+direct return to "goto" instruction.
+'goto release' will cause routine to return with '-1',
+when previously '1' was returned.
+Described behaviour breaks e.g. IMSM reshape process.
+This patch fixes this issue by changing 'goto' to proper one -
+the one that returns '1'.
+
+Signed-off-by: Pawel Baldysiak <pawel.baldysiak@intel.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ Grow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Grow.c b/Grow.c
+index a0f7526..6ff225a 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -2257,7 +2257,7 @@ static int set_new_data_offset(struct mdinfo *sra, struct supertype *st,
+ 			/* Metadata doesn't support data_offset changes */
+ 			pr_err("%s: Metadata version doesn't support"
+ 			       " data_offset changes\n", devname);
+-			goto release;
++			goto fallback;
+ 		}
+ 		if (before > info2.space_before)
+ 			before = info2.space_before;
+-- 
+2.3.4
+
