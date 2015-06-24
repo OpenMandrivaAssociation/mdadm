@@ -27,6 +27,10 @@ Patch3:		mdadm-3.2.7-uclibc-make-ntfw-work-without-ftw-enabled.patch
 Patch4:		mdadm-3.3.2-whole-program.patch
 Patch5:		mdadm-3.3.2-byteswap.patch
 Patch6:		gcc-4.9.patch
+# seems like with C11 standard & gcc 5.1 using gnu11 by default, inlined
+# functions only used in one file, needs to be made static or else require
+# an external definition...
+Patch7:		mdadm-3.3.2-inline.patch
 
 # Fedora patches
 Patch197:	mdadm-3.3.2-udev.patch
