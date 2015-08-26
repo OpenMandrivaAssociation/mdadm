@@ -1,9 +1,9 @@
-%bcond_without	uclibc
+%bcond_with	uclibc
 
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	3.3.2
-Release:	2
+Release:	3
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -77,6 +77,7 @@ program, and it can perform (almost) all functions without a
 configuration file (that a config file can be used to help with
 some common tasks).
 
+%if %{with uclibc}
 %package -n	uclibc-%{name}
 Summary:	A tool for managing Soft RAID under Linux (uClibc build)
 Group:		System/Kernel and hardware
@@ -91,6 +92,7 @@ The particular differences to raidtools is that mdadm is a single
 program, and it can perform (almost) all functions without a
 configuration file (that a config file can be used to help with
 some common tasks).
+%endif
 
 %prep
 %setup -q %{?git:-n %{name}}
