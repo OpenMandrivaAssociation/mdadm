@@ -62,15 +62,4 @@ LABEL="dm_change_end"
 KERNEL=="md*", SUBSYSTEM=="block", ENV{ID_FS_TYPE}=="linux_raid_member", \
 	ACTION=="change", RUN+="/sbin/mdadm -I $env{DEVNAME}"
 
-# In case the initramfs only started some of the arrays in our container,
-# run incremental assembly on the container itself.  Note: we ran mdadm
-# on the container in 64-md-raid.rules, and that's how the MD_LEVEL
-# environment variable is already set.  If that disappears from the other
-# file, we will need to add this line into the middle of the next rule:
-#	IMPORT{program}="/sbin/mdadm -D --export $tempnode", \
-
-SUBSYSTEM=="block", ACTION=="add|change", KERNEL=="md*", \
-	ENV{MD_LEVEL}=="container", RUN+="/sbin/mdadm -I $env{DEVNAME}"
-
-
 LABEL="md_end"

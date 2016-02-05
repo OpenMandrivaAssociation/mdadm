@@ -1,6 +1,2 @@
-removed_sources:
-  mdadm-3.3.2.tar.xz: c649601d84553501c2f3b452cf93d1fbc53f976a
 sources:
-  mdadm-3.3.2.tar.sign: 41424281e5e580c3b21ff9b21301ee7594d3f93e
-  mdadm-3.3.4.tar.sign: 58f7cf32d1f7a7b0356de301278ddb63ef7944b9
-  mdadm-3.3.4.tar.xz: e4bac7d8cdb9520d26b6c8ff27e6941d748e290a
+  mdadm-3.4.tar.xz: 0b6c284970567bfa30dbc14ea5c0e2320582b80c

@@ -1,8 +1,8 @@
-%bcond_with	uclibc
+%bcond_with uclibc
 
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
-Version:	3.3.4
+Version:	3.4
 Release:	1
 Group:		System/Kernel and hardware
 License:	GPLv2+
@@ -17,7 +17,6 @@ Source4:	mdadm-raid-check-sysconfig
 Source5:	mdadm-cron
 Source6:	mdadm.rules
 Source7:	mdmonitor.service
-Source8:	mdmonitor-takeover.service
 Source9:	mdadm-tmpfiles.conf
 Source10:	mdadm_event.conf
 # in situations where only ntfw and not ftw is enabled with uClibc, it's
