@@ -17,10 +17,9 @@ Source6:	mdadm.rules
 Source7:	mdmonitor.service
 Source9:	mdadm-tmpfiles.conf
 Source10:	mdadm_event.conf
-Patch5:		mdadm-3.3.2-byteswap.patch
 
 # Fedora patches
-Patch197:	mdadm-3.3.2-udev.patch
+Patch197:	mdadm-3.3-udev.patch
 
 # udev rule used to be in udev package
 BuildRequires:	groff
@@ -60,10 +59,8 @@ install -p -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/sysconfig/raid-check
 install -p -m644 %{SOURCE5} -D %{buildroot}%{_sysconfdir}/cron.d/raid-check
 install -p -m755 misc/syslog-events -D %{buildroot}/sbin/mdadm-syslog-events
 install -p -m644 %{SOURCE6} -D %{buildroot}%{_udevrulesdir}/65-md-incremental.rules
-
-install -m644 %{SOURCE7} -D %{buildroot}%{_unitdir}/mdmonitor.service
+install -m644 %{SOURCE7} -D %{buildroot}%{_systemunitdir}/mdmonitor.service
 install -m644 %{SOURCE9} -D %{buildroot}%{_tmpfilesdir}/%{name}.conf
-
 install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
 
 %files
@@ -78,8 +75,8 @@ install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm
 %{_udevrulesdir}/63-md-raid-arrays.rules
 %{_udevrulesdir}/64-md-raid-assembly.rules
 %{_udevrulesdir}/65-md-incremental.rules
-%{_unitdir}/*.service
-%{_unitdir}/*.timer
+%{_systemunitdir}/*.service
+%{_systemunitdir}/*.timer
 %{_systemshutdowndir}/mdadm.shutdown
 %{_tmpfilesdir}/%{name}.conf
 %{_sysconfdir}/libreport/events.d/*
