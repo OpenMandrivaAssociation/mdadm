@@ -1,14 +1,11 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.0
-Release:	1
+Release:	2
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
-Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{!?git:%version}%{?git:%git}.tar.xz
-%if %{?git:0}%{?!git:1}
-Source1:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.sign
-%endif
+Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.xz
 # From Fedora
 Source3:	mdadm-raid-check
 Source4:	mdadm-raid-check-sysconfig
@@ -38,20 +35,19 @@ configuration file (that a config file can be used to help with
 some common tasks).
 
 %prep
-%setup -q %{?git:-n %{name}}
-%apply_patches
+%setup -q
+%autopatch -p1
 
 echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
 
 %build
 %setup_compile_flags
-%make CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags} -fno-strict-aliasing"
+%make_build CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags} -fno-strict-aliasing"
 
 %install
 make install-man install-udev DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=/sbin SYSTEMD_DIR=%{_unitdir} install-systemd
 install -m755 mdadm -D %{buildroot}/sbin/mdadm
 install -m755 mdmon -D %{buildroot}/sbin/mdmon
-
 
 install -p -m644 mdadm.conf-example -D %{buildroot}%{_sysconfdir}/mdadm.conf
 install -p -m755 %{SOURCE3} -D %{buildroot}%{_sbindir}/raid-check
@@ -62,6 +58,11 @@ install -p -m644 %{SOURCE6} -D %{buildroot}%{_udevrulesdir}/65-md-incremental.ru
 install -m644 %{SOURCE7} -D %{buildroot}%{_systemunitdir}/mdmonitor.service
 install -m644 %{SOURCE9} -D %{buildroot}%{_tmpfilesdir}/%{name}.conf
 install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
+
+install -d %{buildroot}%{_presetdir}
+cat > %{buildroot}%{_presetdir}/86-%{name}.preset << EOF
+enable mdmonitor.service
+EOF
 
 %files
 %doc TODO ChangeLog README.initramfs ANNOUNCE*
@@ -75,6 +76,7 @@ install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm
 %{_udevrulesdir}/63-md-raid-arrays.rules
 %{_udevrulesdir}/64-md-raid-assembly.rules
 %{_udevrulesdir}/65-md-incremental.rules
+%{_presetdir}/86-%{name}.preset
 %{_systemunitdir}/*.service
 %{_systemunitdir}/*.timer
 %{_systemshutdowndir}/mdadm.shutdown
