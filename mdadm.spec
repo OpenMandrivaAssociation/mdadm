@@ -1,7 +1,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
-Version:	4.0
-Release:	4
+Version:	4.1
+Release:	1
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -55,7 +55,7 @@ install -p -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/sysconfig/raid-check
 install -p -m644 %{SOURCE5} -D %{buildroot}%{_sysconfdir}/cron.d/raid-check
 install -p -m755 misc/syslog-events -D %{buildroot}/sbin/mdadm-syslog-events
 install -p -m644 %{SOURCE6} -D %{buildroot}%{_udevrulesdir}/65-md-incremental.rules
-install -m644 %{SOURCE7} -D %{buildroot}%{_systemunitdir}/mdmonitor.service
+install -m644 %{SOURCE7} -D %{buildroot}%{_unitdir}/mdmonitor.service
 install -m644 %{SOURCE9} -D %{buildroot}%{_tmpfilesdir}/%{name}.conf
 install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
 
@@ -76,10 +76,12 @@ EOF
 %{_udevrulesdir}/63-md-raid-arrays.rules
 %{_udevrulesdir}/64-md-raid-assembly.rules
 %{_udevrulesdir}/65-md-incremental.rules
+%{_udevrulesdir}/69-md-clustered-confirm-device.rules
+%{_udevrulesdir}/01-md-raid-creating.rules
 %{_presetdir}/86-%{name}.preset
-%{_systemunitdir}/*.service
-%{_systemunitdir}/*.timer
-%{_systemshutdowndir}/mdadm.shutdown
+%{_unitdir}/*.service
+%{_unitdir}/*.timer
+/lib/systemd/system-shutdown/mdadm.shutdown
 %{_tmpfilesdir}/%{name}.conf
 %{_sysconfdir}/libreport/events.d/*
 %{_mandir}/man*/md*

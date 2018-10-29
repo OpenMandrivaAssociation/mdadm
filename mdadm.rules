@@ -7,7 +7,7 @@
 ENV{ANACONDA}=="?*", GOTO="md_end"
 
 # Also don't process disks that are slated to be a multipath device
-ENV{DM_MULTIPATH_DEVICE_PATH}=="?*", GOTO="md_end"
+ENV{DM_MULTIPATH_DEVICE_PATH}=="1", GOTO="md_end"
 
 # We process add events on block devices (since they are ready as soon as
 # they are added to the system), but we must process change events as well

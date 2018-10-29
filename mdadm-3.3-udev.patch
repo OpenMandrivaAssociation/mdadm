@@ -1,5 +1,5 @@
---- mdadm-3.3.1/udev-md-raid-assembly.rules~	2014-06-10 13:29:41.192829830 +0200
-+++ mdadm-3.3.1/udev-md-raid-assembly.rules	2014-06-10 13:30:20.838613208 +0200
+--- mdadm/udev-md-raid-assembly.rules~	2018-07-09 18:24:27.450774446 +0800
++++ mdadm/udev-md-raid-assembly.rules	2018-07-09 18:25:12.630735637 +0800
 @@ -5,6 +5,10 @@
  ENV{ANACONDA}=="?*", GOTO="md_inc_end"
  # assemble md arrays
@@ -10,4 +10,4 @@
 +
  SUBSYSTEM!="block", GOTO="md_inc_end"
  
- # handle potential components of arrays (the ones supported by md)
+ # skip non-initialized devices
