@@ -1,7 +1,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.1
-Release:	3
+Release:	4
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -17,6 +17,7 @@ Source10:	mdadm_event.conf
 
 # Fedora patches
 Patch197:	mdadm-3.3-udev.patch
+Patch198:	https://src.fedoraproject.org/rpms/mdadm/raw/master/f/mdadm-4.1-no-Werror.patch
 
 # udev rule used to be in udev package
 BuildRequires:	groff
