@@ -1,11 +1,60 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.1
-Release:	4
+Release:	5
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
 Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.xz
+# fixes from uptream
+Patch001:	0001-Assemble-keep-MD_DISK_FAILFAST-and-MD_DISK_WRITEMOST.patch
+Patch002:	0002-Document-PART-POLICY-lines.patch
+Patch003:	0003-policy-support-devices-with-multiple-paths.patch
+Patch004:	0004-mdcheck-add-systemd-unit-files-to-run-mdcheck.patch
+Patch005:	0005-Monitor-add-system-timer-to-run-oneshot-periodically.patch
+Patch006:	0006-imsm-update-metadata-correctly-while-raid10-double-d.patch
+Patch007:	0007-Assemble-mask-FAILFAST-and-WRITEMOSTLY-flags-when-fi.patch
+Patch008:	0008-Grow-avoid-overflow-in-compute_backup_blocks.patch
+Patch009:	0009-Grow-report-correct-new-chunk-size.patch
+Patch010:	0010-policy.c-prevent-NULL-pointer-referencing.patch
+Patch011:	0011-policy.c-Fix-for-compiler-error.patch
+Patch012:	0012-imsm-finish-recovery-when-drive-with-rebuild-fails.patch
+Patch013:	0013-imsm-fix-reshape-for-2TB-drives.patch
+Patch014:	0014-Fix-spelling-typos.patch
+Patch015:	0015-Detail.c-do-not-skip-first-character-when-calling-xs.patch
+Patch016:	0016-Fix-reshape-for-decreasing-data-offset.patch
+Patch017:	0017-mdadm-tests-add-one-test-case-for-failfast-of-raid1.patch
+Patch018:	0018-mdmon-don-t-attempt-to-manage-new-arrays-when-termin.patch
+Patch019:	0019-mdmon-wait-for-previous-mdmon-to-exit-during-takeove.patch
+Patch020:	0020-Assemble-Fix-starting-array-with-initial-reshape-che.patch
+Patch021:	0021-add-missing-units-to-examine.patch
+Patch022:	0022-imsm-fix-spare-activation-for-old-matrix-arrays.patch
+Patch023:	0023-Create-Block-rounding-size-to-max.patch
+Patch024:	0024-udev-Add-udev-rules-to-create-by-partuuid-for-md-dev.patch
+Patch025:	0025-mdmon-fix-wrong-array-state-when-disk-fails-during-m.patch
+Patch026:	0026-Enable-probe_roms-to-scan-more-than-6-roms.patch
+Patch027:	0027-super-intel-Fix-issue-with-abs-being-irrelevant.patch
+Patch028:	0028-mdadm.h-Introduced-unaligned-get-put-_unaligned-16-3.patch
+Patch029:	0029-super-intel-Use-put_unaligned-in-split_ull.patch
+Patch030:	0030-mdadm-load-default-sysfs-attributes-after-assemblati.patch
+Patch031:	0031-mdadm.h-include-sysmacros.h-unconditionally.patch
+Patch032:	0032-mdadm-add-no-devices-to-avoid-component-devices-deta.patch
+Patch033:	0033-udev-add-no-devices-option-for-calling-mdadm-detail.patch
+Patch034:	0034-imsm-close-removed-drive-fd.patch
+Patch035:	0035-mdadm-check-value-returned-by-snprintf-against-error.patch
+Patch036:	0036-mdadm-Introduce-new-array-state-broken-for-raid0-lin.patch
+Patch037:	0037-mdadm-force-a-uuid-swap-on-big-endian.patch
+Patch038:	0038-mdadm-md.4-add-the-descriptions-for-bitmap-sysfs-nod.patch
+Patch039:	0039-Init-devlist-as-an-array.patch
+Patch040:	0040-Don-t-need-to-check-recovery-after-re-add-when-no-I-.patch
+Patch041:	0041-udev-allow-for-udev-attribute-reading-bug.patch
+Patch042:	0042-imsm-save-current_vol-number.patch
+Patch043:	0043-imsm-allow-to-specify-second-volume-size.patch
+Patch044:	0044-mdcheck-when-mdcheck_start-is-enabled-enable-mdcheck.patch
+Patch045:	0045-mdcheck-use-to-pass-variable-to-mdcheck.patch
+Patch046:	0046-SUSE-mdadm_env.sh-handle-MDADM_CHECK_DURATION.patch
+Patch047:	0047-super-intel-don-t-mark-structs-packed-unnecessarily.patch
+
 # From Fedora
 Source3:	mdadm-raid-check
 Source4:	mdadm-raid-check-sysconfig
@@ -39,7 +88,7 @@ some common tasks).
 %setup -q
 %autopatch -p1
 
-echo "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
+printf '%s\n' "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
 
 %build
 %setup_compile_flags
