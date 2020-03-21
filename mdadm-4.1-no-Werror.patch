@@ -11,13 +11,12 @@ Signed-off-by: martin f. krafft <madduck@debian.org>
  Makefile |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
-Index: mdadm-4.1/Makefile
-===================================================================
---- mdadm-4.1.orig/Makefile
-+++ mdadm-4.1/Makefile
-@@ -48,7 +48,7 @@ endif
- 
- CC ?= $(CROSS_COMPILE)gcc
+diff -Naur mdadm-4.1/Makefile mdadm-4.1.tpg/Makefile
+--- mdadm-4.1/Makefile	2020-03-21 23:28:03.783113462 +0000
++++ mdadm-4.1.tpg/Makefile	2020-03-21 23:28:48.607942225 +0000
+@@ -50,7 +50,7 @@
+ CC := $(CROSS_COMPILE)gcc
+ endif
  CXFLAGS ?= -ggdb
 -CWFLAGS = -Wall -Werror -Wstrict-prototypes -Wextra -Wno-unused-parameter
 +CWFLAGS = -Wall -Wstrict-prototypes -Wextra -Wno-unused-parameter
