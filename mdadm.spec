@@ -1,7 +1,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.1
-Release:	5
+Release:	6
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -54,24 +54,43 @@ Patch044:	0044-mdcheck-when-mdcheck_start-is-enabled-enable-mdcheck.patch
 Patch045:	0045-mdcheck-use-to-pass-variable-to-mdcheck.patch
 Patch046:	0046-SUSE-mdadm_env.sh-handle-MDADM_CHECK_DURATION.patch
 Patch047:	0047-super-intel-don-t-mark-structs-packed-unnecessarily.patch
+Patch048:	0048-Manage-Remove-the-legacy-code-for-md-driver-prior-to.patch
+Patch049:	0049-Remove-last-traces-of-HOT_ADD_DISK.patch
+Patch050:	0050-Fix-up-a-few-formatting-issues.patch
+Patch051:	0051-Remove-unused-code.patch
+Patch052:	0052-imsm-return-correct-uuid-for-volume-in-detail.patch
+Patch053:	0053-imsm-Change-the-way-of-printing-nvme-drives-in-detai.patch
+Patch054:	0054-Create-add-support-for-RAID0-layouts.patch
+Patch055:	0055-Assemble-add-support-for-RAID0-layouts.patch
+Patch056:	0056-Respect-CROSS_COMPILE-when-CC-is-the-default.patch
+Patch057:	0057-Change-warning-message.patch
+Patch058:	0058-mdcheck-service-can-t-start-succesfully-because-of-s.patch
+Patch059:	0059-imsm-Update-grow-manual.patch
+Patch060:	0060-Add-support-for-Tebibytes.patch
+Patch061:	0061-imsm-fill-working_disks-according-to-metadata.patch
+Patch062:	0062-mdadm.8-add-note-information-for-raid0-growing-opera.patch
+Patch063:	0063-Remove-the-legacy-whitespace.patch
+Patch064:	0064-imsm-pass-subarray-id-to-kill_subarray-function.patch
+Patch065:	0065-imsm-Remove-dump-restore-implementation.patch
 
 # From Fedora
 Source3:	mdadm-raid-check
 Source4:	mdadm-raid-check-sysconfig
-Source5:	mdadm-cron
-Source6:	mdadm.rules
-Source7:	mdmonitor.service
+Source5:	raid-check.timer
+Source6:	raid-check.service
+Source7:	mdadm.rules
+Source8:	mdmonitor.service
 Source9:	mdadm-tmpfiles.conf
 Source10:	mdadm_event.conf
 
 # Fedora patches
-Patch197:	mdadm-3.3-udev.patch
 Patch198:	https://src.fedoraproject.org/rpms/mdadm/raw/master/f/mdadm-4.1-no-Werror.patch
 
 # udev rule used to be in udev package
 BuildRequires:	groff
 BuildRequires:	binutils-devel
 BuildRequires:	pkgconfig(systemd)
+BuildRequires:	systemd-macros
 Requires:	libreport-filesystem
 
 %description
@@ -85,8 +104,7 @@ configuration file (that a config file can be used to help with
 some common tasks).
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -p1
 
 printf '%s\n' "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
 
@@ -102,16 +120,18 @@ install -m755 mdmon -D %{buildroot}/sbin/mdmon
 install -p -m644 mdadm.conf-example -D %{buildroot}%{_sysconfdir}/mdadm.conf
 install -p -m755 %{SOURCE3} -D %{buildroot}%{_sbindir}/raid-check
 install -p -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/sysconfig/raid-check
-install -p -m644 %{SOURCE5} -D %{buildroot}%{_sysconfdir}/cron.d/raid-check
+install -p -m644 %{SOURCE5} -D %{buildroot}%{_unitdir}/raid-check.timer
+install -p -m644 %{SOURCE6} -D %{buildroot}%{_unitdir}/raid-check.service
 install -p -m755 misc/syslog-events -D %{buildroot}/sbin/mdadm-syslog-events
-install -p -m644 %{SOURCE6} -D %{buildroot}%{_udevrulesdir}/65-md-incremental.rules
-install -m644 %{SOURCE7} -D %{buildroot}%{_unitdir}/mdmonitor.service
+install -p -m644 %{SOURCE7} -D %{buildroot}%{_udevrulesdir}/65-md-incremental.rules
+install -m644 %{SOURCE8} -D %{buildroot}%{_unitdir}/mdmonitor.service
 install -m644 %{SOURCE9} -D %{buildroot}%{_tmpfilesdir}/%{name}.conf
 install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm_event.conf
 
 install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-%{name}.preset << EOF
 enable mdmonitor.service
+raid-check.timer
 EOF
 
 %files
@@ -120,7 +140,6 @@ EOF
 /sbin/mdadm-syslog-events
 /sbin/mdmon
 %{_sbindir}/raid-check
-%config(noreplace) %{_sysconfdir}/cron.d/raid-check
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/raid-check
 %{_udevrulesdir}/63-md-raid-arrays.rules

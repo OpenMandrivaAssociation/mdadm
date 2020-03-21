@@ -25,7 +25,7 @@ ENV{DM_MULTIPATH_DEVICE_PATH}=="1", GOTO="md_end"
 # anything here, just regular disks, and this also won't get any imsm
 # array members either)
 SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}=="linux_raid_member", \
-	IMPORT{program}="/sbin/mdadm -I $env{DEVNAME} --export $devnode --offroot $env{DEVLINKS}"
+	IMPORT{program}="/sbin/mdadm -I $env{DEVNAME} --export $devnode --offroot $${DEVLINKS}"
 SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}=="linux_raid_member", \
 	ENV{MD_STARTED}=="*unsafe*", ENV{MD_FOREIGN}=="no", ENV{SYSTEMD_WANTS}+="mdadm-last-resort@$env{MD_DEVICE}.timer"
 SUBSYSTEM=="block", ACTION=="remove", ENV{ID_PATH}=="?*", \
