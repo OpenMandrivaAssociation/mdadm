@@ -1,7 +1,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.1
-Release:	6
+Release:	7
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -131,7 +131,7 @@ install -m644 %{SOURCE10} -D %{buildroot}%{_sysconfdir}/libreport/events.d/mdadm
 install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-%{name}.preset << EOF
 enable mdmonitor.service
-raid-check.timer
+enable raid-check.timer
 EOF
 
 %files
