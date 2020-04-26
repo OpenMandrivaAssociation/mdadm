@@ -1,11 +1,12 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.1
-Release:	7
+Release:	8
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
 Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.xz
+Source20:	61-dracut-distro-mdraid.conf
 # fixes from uptream
 Patch001:	0001-Assemble-keep-MD_DISK_FAILFAST-and-MD_DISK_WRITEMOST.patch
 Patch002:	0002-Document-PART-POLICY-lines.patch
@@ -134,6 +135,9 @@ enable mdmonitor.service
 enable raid-check.timer
 EOF
 
+mkdir -p %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d
+cp %{S:20} %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d/
+
 %files
 %doc TODO ChangeLog README.initramfs ANNOUNCE*
 /sbin/mdadm
@@ -154,3 +158,4 @@ EOF
 %{_tmpfilesdir}/%{name}.conf
 %{_sysconfdir}/libreport/events.d/*
 %{_mandir}/man*/md*
+%{_prefix}/lib/dracut/dracut.conf.d/61-dracut-distro-mdraid.conf
