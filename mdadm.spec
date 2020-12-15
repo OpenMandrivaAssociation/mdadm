@@ -1,7 +1,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.1
-Release:	8
+Release:	9
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -110,7 +110,7 @@ some common tasks).
 printf '%s\n' "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
 
 %build
-%setup_compile_flags
+%set_build_flags
 %make_build CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags} -fno-strict-aliasing"
 
 %install
