@@ -1,7 +1,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.1
-Release:	9
+Release:	10
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -137,6 +137,15 @@ EOF
 
 mkdir -p %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d
 cp %{S:20} %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d/
+
+%post
+%systemd_post mdmonitor.service raid-check.timer
+
+%preun
+%systemd_preun mdmonitor.service raid-check.timer
+
+%postun
+%systemd_postun_with_restart mdmonitor.service
 
 %files
 %doc TODO ChangeLog README.initramfs ANNOUNCE*
