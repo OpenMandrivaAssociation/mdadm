@@ -25,6 +25,7 @@ Patch198:	https://src.fedoraproject.org/rpms/mdadm/raw/master/f/mdadm-4.1-no-Wer
 BuildRequires:	groff
 BuildRequires:	binutils-devel
 BuildRequires:	pkgconfig(systemd)
+BuildRequires:	pkgconfig(udev)
 BuildRequires:	systemd-macros
 Requires:	libreport-filesystem
 
