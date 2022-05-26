@@ -1,7 +1,7 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
 Version:	4.2
-Release:	1
+Release:	2
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
@@ -42,23 +42,23 @@ some common tasks).
 %prep
 %autosetup -p1
 
-printf '%s\n' "PROGRAM /sbin/mdadm-syslog-events" >> mdadm.conf-example
+printf '%s\n' "PROGRAM %{_sbindir}/mdadm-syslog-events" >> mdadm.conf-example
 
 %build
 %set_build_flags
 %make_build CWFLAGS=-Wall SYSCONFDIR="%{_sysconfdir}" CXFLAGS="%{optflags} -fno-strict-aliasing"
 
 %install
-make install-man install-udev DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=/sbin SYSTEMD_DIR=%{_unitdir} install-systemd
-install -m755 mdadm -D %{buildroot}/sbin/mdadm
-install -m755 mdmon -D %{buildroot}/sbin/mdmon
+make install-man install-udev DESTDIR=%{buildroot} MANDIR=%{_mandir} BINDIR=%{_sbindir} SYSTEMD_DIR=%{_unitdir} install-systemd
+install -m755 mdadm -D %{buildroot}%{_sbindir}/mdadm
+install -m755 mdmon -D %{buildroot}%{_sbindir}/mdmon
 
 install -p -m644 mdadm.conf-example -D %{buildroot}%{_sysconfdir}/mdadm.conf
 install -p -m755 %{SOURCE3} -D %{buildroot}%{_sbindir}/raid-check
 install -p -m644 %{SOURCE4} -D %{buildroot}%{_sysconfdir}/sysconfig/raid-check
 install -p -m644 %{SOURCE5} -D %{buildroot}%{_unitdir}/raid-check.timer
 install -p -m644 %{SOURCE6} -D %{buildroot}%{_unitdir}/raid-check.service
-install -p -m755 misc/syslog-events -D %{buildroot}/sbin/mdadm-syslog-events
+install -p -m755 misc/syslog-events -D %{buildroot}/usr/sbin/mdadm-syslog-events
 install -p -m644 %{SOURCE7} -D %{buildroot}%{_udevrulesdir}/65-md-incremental.rules
 install -m644 %{SOURCE8} -D %{buildroot}%{_unitdir}/mdmonitor.service
 install -m644 %{SOURCE9} -D %{buildroot}%{_tmpfilesdir}/%{name}.conf
@@ -84,10 +84,7 @@ cp %{S:20} %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d/
 
 %files
 %doc TODO ChangeLog README.initramfs ANNOUNCE*
-/sbin/mdadm
-/sbin/mdadm-syslog-events
-/sbin/mdmon
-%{_sbindir}/raid-check
+%{_sbindir}/*
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/raid-check
 %{_udevrulesdir}/63-md-raid-arrays.rules
@@ -98,7 +95,7 @@ cp %{S:20} %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d/
 %{_presetdir}/86-%{name}.preset
 %{_unitdir}/*.service
 %{_unitdir}/*.timer
-/lib/systemd/system-shutdown/mdadm.shutdown
+%{_systemd_util_dir}/system-shutdown/mdadm.shutdown
 %{_tmpfilesdir}/%{name}.conf
 %{_sysconfdir}/libreport/events.d/*
 %{_mandir}/man*/md*
