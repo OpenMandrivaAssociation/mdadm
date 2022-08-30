@@ -4,7 +4,6 @@ ConditionPathExists=/etc/mdadm.conf
 
 [Service]
 Type=forking
-PIDFile=/run/mdadm/mdadm.pid
 EnvironmentFile=-/etc/sysconfig/mdmonitor
 ExecStart=/usr/sbin/mdadm --monitor --scan --syslog -f --pid-file=/run/mdadm/mdadm.pid
 
