@@ -1,25 +1,12 @@
-From: martin f. krafft <madduck@debian.org>
-Subject: Remove -Werror from compiler flags
-
--Werror seems like a bad idea on released/packaged code because a toolchain
-update (introducing new warnings) could break the build. We'll let upstream
-use it to beautify the code, but remove it for out builds.
-
-Signed-off-by: martin f. krafft <madduck@debian.org>
-
----
- Makefile |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff -Naur mdadm-4.1/Makefile mdadm-4.1.tpg/Makefile
---- mdadm-4.1/Makefile	2020-03-21 23:28:03.783113462 +0000
-+++ mdadm-4.1.tpg/Makefile	2020-03-21 23:28:48.607942225 +0000
-@@ -50,7 +50,7 @@
+diff -up mdadm-4.3/Makefile.1~ mdadm-4.3/Makefile
+--- mdadm-4.3/Makefile.1~	2024-03-03 12:01:07.685672168 +0100
++++ mdadm-4.3/Makefile	2024-03-03 13:01:50.795275194 +0100
+@@ -50,7 +50,7 @@ ifeq ($(origin CC),default)
  CC := $(CROSS_COMPILE)gcc
  endif
  CXFLAGS ?= -ggdb
--CWFLAGS = -Wall -Werror -Wstrict-prototypes -Wextra -Wno-unused-parameter
-+CWFLAGS = -Wall -Wstrict-prototypes -Wextra -Wno-unused-parameter
+-CWFLAGS ?= -Wall -Werror -Wstrict-prototypes -Wextra -Wno-unused-parameter -Wformat -Wformat-security -Werror=format-security -fstack-protector-strong -fPIE -Warray-bounds
++CWFLAGS ?= -Wall -Wstrict-prototypes -Wextra -Wno-unused-parameter -Wformat -Wformat-security -Werror=format-security -fstack-protector-strong -fPIE -Warray-bounds
  ifdef WARN_UNUSED
- CWFLAGS += -Wp,-D_FORTIFY_SOURCE=2 -O3
+ CWFLAGS += -Wp -O3
  endif
