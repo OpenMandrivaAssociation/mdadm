@@ -4,7 +4,7 @@ Version:	4.3
 Release:	1
 Group:		System/Kernel and hardware
 License:	GPLv2+
-Url:		http://www.kernel.org/pub/linux/utils/raid/mdadm/
+Url:		https://www.kernel.org/pub/linux/utils/raid/mdadm/
 Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.xz
 Source20:	61-dracut-distro-mdraid.conf
 
