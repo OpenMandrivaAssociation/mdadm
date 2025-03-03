@@ -1,11 +1,11 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
-Version:	4.3
+Version:	4.4
 Release:	1
 Group:		System/Kernel and hardware
 License:	GPLv2+
 Url:		https://www.kernel.org/pub/linux/utils/raid/mdadm/
-Source0:	http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.xz
+Source0:	https://github.com/md-raid-utilities/mdadm/archive/refs/tags/mdadm-%{version}.tar.gz
 Source20:	61-dracut-distro-mdraid.conf
 
 # From Fedora
@@ -40,7 +40,7 @@ configuration file (that a config file can be used to help with
 some common tasks).
 
 %prep
-%autosetup -p1
+%autosetup -p1 -n %{name}-%{name}-%{version}
 
 printf '%s\n' "PROGRAM %{_bindir}/mdadm-syslog-events" >> mdadm.conf-example
 
@@ -84,7 +84,7 @@ cp %{S:20} %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d/
 %systemd_postun_with_restart mdmonitor.service
 
 %files
-%doc TODO ChangeLog README.initramfs ANNOUNCE*
+%doc MAINTAINERS.md CHANGELOG.md README.md
 %{_bindir}/*
 %config(noreplace,missingok) %{_sysconfdir}/mdadm.conf
 %config(noreplace) %{_sysconfdir}/sysconfig/raid-check
