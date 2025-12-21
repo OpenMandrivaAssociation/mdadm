@@ -22,6 +22,7 @@ Source10:	mdadm_event.conf
 Patch198:	https://src.fedoraproject.org/rpms/mdadm/raw/master/f/mdadm-4.1-no-Werror.patch
 
 # udev rule used to be in udev package
+BuildRequires:	make
 BuildRequires:	groff
 BuildRequires:	binutils-devel
 BuildRequires:	pkgconfig(systemd)
