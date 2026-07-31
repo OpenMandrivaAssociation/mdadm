@@ -1,6 +1,6 @@
 Summary:	A tool for managing Soft RAID under Linux
 Name:		mdadm
-Version:	4.4
+Version:	4.6
 Release:	1
 Group:		System/Kernel and hardware
 License:	GPLv2+
@@ -41,7 +41,7 @@ configuration file (that a config file can be used to help with
 some common tasks).
 
 %prep
-%autosetup -p1 -n %{name}-%{name}-%{version}
+%autosetup -p1 -n mdadm-mdadm-4.6
 
 printf '%s\n' "PROGRAM %{_bindir}/mdadm-syslog-events" >> mdadm.conf-example
 
